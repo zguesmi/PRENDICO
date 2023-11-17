@@ -64,10 +64,10 @@ export class AppService {
     const ip = '212.175.155.170';
     try {
       const response = await fetch(
-        `http://api.ipstack.com/${ip}?access_key=${process.env.PRIVATE_KEY}`,
+        `http://api.ipstack.com/${ip}?access_key=${process.env.LOCATION_API_KEY}`,
       );
       console.log(
-        `http://api.ipstack.com/${ip}?access_key=${process.env.PRIVATE_KEY}`,
+        `http://api.ipstack.com/${ip}?access_key=${process.env.LOCATION_API_KEY}`,
       );
       const json = await response.json();
       return json['country_name'];
