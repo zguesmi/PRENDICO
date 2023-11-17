@@ -1,27 +1,37 @@
 import { Injectable } from '@nestjs/common';
 import { parseStringPromise } from 'xml2js';
-import { Signature } from 'o1js';
+import Client from 'mina-signer';
+
+const client = new Client({ network: 'mainnet' });
 
 @Injectable()
 export class AppService {
   getHello(): string {
+    // Generate keys
+    const keypair = client.genKeys();
+
+    // Sign and verify message
+    const signed = client.signMessage('hello', keypair.privateKey);
+    if (client.verifyMessage(signed)) {
+      console.log('Message was verified successfully');
+    }
     return 'hello';
   }
 
-  getSignature(
-    userSessionId: string,
-    disasterId: string,
-    amount: number,
-    salt: string,
-  ): string {
-    const hash = Signature.create('privateKey', [
-      disasterId,
-      userSessionId,
-      amount,
-      salt,
-    ]).toString();
-    return hash;
-  }
+  //   getSignature(
+  //     userSessionId: string,
+  //     disasterId: string,
+  //     amount: number,
+  //     salt: string,
+  //   ): string {
+  //     const hash = Signature.create('privateKey', [
+  //       disasterId,
+  //       userSessionId,
+  //       amount,
+  //       salt,
+  //     ]).toString();
+  //     return hash;
+  //   }
 
   async getCountryCode(_ip: string): Promise<any> {
     //to remove
