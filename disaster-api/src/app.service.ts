@@ -88,12 +88,10 @@ export class AppService {
     amount: number;
     salt: number;
   }): string {
-    // Generate keys
-    const keypair = client.genKeys(); //TODO: read .env
-
+    const signerPrivateKey = process.env.SIGNER_PRIVATE_KEY;
     const signed = client.signFields(
       [BigInt(userSessionId), BigInt(disasterId), BigInt(amount), BigInt(salt)],
-      keypair.privateKey,
+      signerPrivateKey,
     );
 
     // Just checking
