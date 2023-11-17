@@ -60,8 +60,16 @@ $ npm run test:cov
 
 ## Run phoneNumber API
 
+Get code
+
 ```bash
-http://localhost:8080/...
+http://localhost:8081/verificationcode?phoneNumber=0693581179
+```
+
+Verify my code received by telephone and return signature
+
+```bash
+http://localhost:8081/verifycode?verificationCode=929354&userSessionId=543&phoneNumber=0693581179
 ```
 
 ## Support
