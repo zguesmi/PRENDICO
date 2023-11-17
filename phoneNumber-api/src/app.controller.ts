@@ -10,7 +10,7 @@ export class AppController {
     return this.appService.getHello();
   }
 
-  @Get('/disaster')
+  @Get('/verificationcode')
   getVerificationCode(
     @Res() response: Response,
     @Query('phoneNumber') phoneNumber: number,
@@ -18,11 +18,16 @@ export class AppController {
     return this.appService.getVerificationCode(response, phoneNumber);
   }
 
-  @Get('/disaster')
-  getSubmission(
+  @Get('/verifycode')
+  verifyCode(
     @Res() response: Response,
     @Query('verificationCode') verificationCode: number,
+    @Query('userSessionId') userSessionId: number,
   ): Promise<string> {
-    return this.appService.getSubmission(response, verificationCode);
+    return this.appService.verifyCode(
+      response,
+      verificationCode,
+      userSessionId,
+    );
   }
 }
