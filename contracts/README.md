@@ -24,3 +24,9 @@ npm run coverage
 ## License
 
 [Apache-2.0](LICENSE)
+
+### How to use zkApp
+
+```sh
+npx zk <command>
+```
