@@ -58,8 +58,8 @@ export default function Home() {
               alt="UNICEF Logo"
               width={0}
               height={0}
-              sizes="1vw"
-              style={{ width: "10%", height: "auto" }}
+              sizes="100vw"
+              style={{ width: "11%", height: "auto" }}
             />
             <div>
               <Button color="inherit">Login</Button>
