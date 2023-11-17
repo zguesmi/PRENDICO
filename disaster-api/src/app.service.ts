@@ -52,7 +52,7 @@ export class AppService {
         ...fieldsResponse,
         sign,
       };
-      return finalResponse;
+      return res.status(200).json(finalResponse);
     } catch (error) {
       console.error(error);
       throw new Error('Error fetching or parsing data');
