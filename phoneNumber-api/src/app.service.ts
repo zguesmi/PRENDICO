@@ -26,12 +26,12 @@ export class AppService {
 
   async verifyCode(
     res: any,
+    phoneNumber: number,
     verificationCode: number,
     userSessionId: number,
   ): Promise<any> {
     try {
       //find the code verification in the mapping
-      console.log(phoneNumberToChallengeCode);
       const matchingPhoneNumber = phoneNumberToChallengeCode.find(
         ([_, code]) => code == Number(verificationCode),
       )?.[0];

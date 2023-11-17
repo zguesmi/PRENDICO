@@ -21,10 +21,12 @@ export class AppController {
   @Get('/verifycode')
   verifyCode(
     @Res() response: Response,
+    @Query('phoneNumber') phoneNumber: number,
     @Query('verificationCode') verificationCode: number,
     @Query('userSessionId') userSessionId: number,
   ): Promise<string> {
     return this.appService.verifyCode(
+      phoneNumber,
       response,
       verificationCode,
       userSessionId,
