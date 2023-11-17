@@ -1,37 +1,63 @@
 import { Injectable } from '@nestjs/common';
 import { parseStringPromise } from 'xml2js';
 import Client from 'mina-signer';
+import { randomInt } from 'crypto';
 
-const client = new Client({ network: 'mainnet' });
+const client = new Client({ network: 'testnet' });
+const COMPENSATION = 1; // Send 1 MINA on disaster
+const DISASTER_LEVEL = 'Orange';
 
 @Injectable()
 export class AppService {
   getHello(): string {
-    // Generate keys
-    const keypair = client.genKeys();
-
-    // Sign and verify message
-    const signed = client.signMessage('hello', keypair.privateKey);
-    if (client.verifyMessage(signed)) {
-      console.log('Message was verified successfully');
-    }
     return 'hello';
   }
 
-  //   getSignature(
-  //     userSessionId: string,
-  //     disasterId: string,
-  //     amount: number,
-  //     salt: string,
-  //   ): string {
-  //     const hash = Signature.create('privateKey', [
-  //       disasterId,
-  //       userSessionId,
-  //       amount,
-  //       salt,
-  //     ]).toString();
-  //     return hash;
-  //   }
+  async getDisaster(res: any, ip: string, userSessionId: number): Promise<any> {
+    try {
+      let countryName = await this.getCountryCode(ip);
+
+      const response = await fetch('https://gdacs.org/xml/rss.xml');
+      const xml = await response.text();
+      const json = await parseStringPromise(xml, { explicitArray: false });
+      const items = json.rss.channel.item;
+
+      let isDisaster = false;
+      let disasterId: number;
+      //to remove
+      countryName = 'Philippines';
+      items.forEach((disaster) => {
+        if (
+          disaster['gdacs:country'] == countryName &&
+          disaster['gdacs:episodealertlevel'] == DISASTER_LEVEL
+        ) {
+          isDisaster = true;
+          disasterId = disaster['gdacs:eventid'];
+          return false; // exit if matching disaster
+        }
+      });
+      if (!isDisaster) {
+        return res.status(404).json({ error: 'No disaster to compensate' });
+      }
+
+      const fieldsResponse = {
+        userSessionId: userSessionId,
+        disasterId,
+        salt: randomInt(1_000_000),
+        amount: COMPENSATION,
+      };
+
+      const sign = this.signFields(fieldsResponse);
+      const finalResponse = {
+        ...fieldsResponse,
+        sign,
+      };
+      return finalResponse;
+    } catch (error) {
+      console.error(error);
+      throw new Error('Error fetching or parsing data');
+    }
+  }
 
   async getCountryCode(_ip: string): Promise<any> {
     //to remove
@@ -51,32 +77,30 @@ export class AppService {
     }
   }
 
-  async getDisaster(ip: string, userSessionId: string): Promise<any> {
-    try {
-      const level = 'Orange';
-      let countryName = await this.getCountryCode(ip);
+  signFields({
+    userSessionId,
+    disasterId,
+    amount,
+    salt,
+  }: {
+    userSessionId: number;
+    disasterId: number;
+    amount: number;
+    salt: number;
+  }): string {
+    // Generate keys
+    const keypair = client.genKeys(); //TODO: read .env
 
-      const response = await fetch('https://gdacs.org/xml/rss.xml');
-      const xml = await response.text();
-      const json = await parseStringPromise(xml, { explicitArray: false });
-      const items = json.rss.channel.item;
+    const signed = client.signFields(
+      [BigInt(userSessionId), BigInt(disasterId), BigInt(amount), BigInt(salt)],
+      keypair.privateKey,
+    );
 
-      let isDisaster = false;
-      //to remove
-      countryName = 'Philippines';
-      items.forEach((disaster) => {
-        if (
-          disaster['gdacs:country'] == countryName &&
-          disaster['gdacs:episodealertlevel'] == level
-        ) {
-          isDisaster = true;
-        }
-      });
-      console.log(isDisaster);
-      return items;
-    } catch (error) {
-      console.error(error);
-      throw new Error('Error fetching or parsing data');
+    // Just checking
+    if (client.verifyFields(signed)) {
+      console.log('Fields was verified successfully');
     }
+
+    return signed.signature;
   }
 }

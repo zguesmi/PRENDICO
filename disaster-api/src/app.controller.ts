@@ -1,4 +1,4 @@
-import { Controller, Get, Ip, Param } from '@nestjs/common';
+import { Controller, Get, Ip, Query, Res } from '@nestjs/common';
 import { AppService } from './app.service';
 
 @Controller()
@@ -12,9 +12,10 @@ export class AppController {
 
   @Get('/disaster')
   getDisaster(
+    @Res() response: Response,
     @Ip() _ip,
-    @Param('userSessionId') userSessionId: string,
+    @Query('userSessionId') userSessionId: number,
   ): Promise<string> {
-    return this.appService.getDisaster(_ip, userSessionId);
+    return this.appService.getDisaster(response, _ip, userSessionId);
   }
 }
