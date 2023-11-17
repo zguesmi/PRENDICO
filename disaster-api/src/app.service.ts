@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { parseStringPromise } from 'xml2js';
-import { Poseidon } from 'o1js';
+import { Signature } from 'o1js';
 
 @Injectable()
 export class AppService {
@@ -8,8 +8,18 @@ export class AppService {
     return 'hello';
   }
 
-  getHash(): string {
-    const hash = Poseidon.hash([userSessionId, ...]).toString();
+  getSignature(
+    userSessionId: string,
+    disasterId: string,
+    amount: number,
+    salt: string,
+  ): string {
+    const hash = Signature.create('privateKey', [
+      disasterId,
+      userSessionId,
+      amount,
+      salt,
+    ]).toString();
     return hash;
   }
 
