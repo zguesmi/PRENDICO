@@ -26,8 +26,8 @@ export class AppController {
     @Query('userSessionId') userSessionId: number,
   ): Promise<string> {
     return this.appService.verifyCode(
-      phoneNumber,
       response,
+      phoneNumber,
       verificationCode,
       userSessionId,
     );

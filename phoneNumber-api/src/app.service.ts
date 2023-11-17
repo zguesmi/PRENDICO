@@ -36,7 +36,10 @@ export class AppService {
         ([_, code]) => code == Number(verificationCode),
       )?.[0];
 
-      if (matchingPhoneNumber === undefined) {
+      console.log(matchingPhoneNumber);
+      console.log(phoneNumber);
+
+      if (matchingPhoneNumber != phoneNumber) {
         // No matching phone number found, return a 404 error
         return res.status(404).json({ error: 'Phone number not found' });
       }
