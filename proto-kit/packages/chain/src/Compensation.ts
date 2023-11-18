@@ -101,25 +101,28 @@ export class Compensation extends RuntimeModule<CompensationConfig> {
     @state() public phoneOraclePublicKey = State.from<PublicKey>(PublicKey);
     @state() public nullifiers = StateMap.from<Field, Bool>(Field, Bool);
 
-    public constructor(@inject('Balances') public balances: Balances, @inject('Admin') public admin: Admin,) {
+    public constructor(
+        @inject('Balances') public balancesContract: Balances,
+        @inject('Admin') public adminContract: Admin,
+    ) {
         super();
     }
 
     @runtimeMethod()
     // add random input to prevent error
     public setAdmin(rndAddrr : PublicKey) {
-        this.admin.setAdmin();
+        this.adminContract.setAdmin();
     }
 
     @runtimeMethod()
     // add random input to prevent error
     public changeAdmin(newAdmin : PublicKey) {
-        this.admin.changeAdmin(newAdmin);
+        this.adminContract.changeAdmin(newAdmin);
     }
 
     @runtimeMethod()
     public setupPublicKeys(disasterOraclePublicKey: PublicKey, phoneOraclePublicKey: PublicKey) {
-        this.admin.OnlyAdmin()
+        this.adminContract.OnlyAdmin()
         this.disasterOraclePublicKey.set(disasterOraclePublicKey);
         this.phoneOraclePublicKey.set(phoneOraclePublicKey);
     }
@@ -144,10 +147,10 @@ export class Compensation extends RuntimeModule<CompensationConfig> {
         this.nullifiers.set(compensationProof.publicOutput.nullifier, Bool(true));
 
         // TODO use correct addresses.
-        const owner: PublicKey = PublicKey.empty();
+        const owner: PublicKey = this.adminContract.admin.get().value;
         // compensationProof.publicOutput.nullifier.getPublicKey();
         const to: PublicKey = PublicKey.empty();
         const amount: UInt64 = UInt64.from(compensationProof.publicOutput.amount);
-        this.balances.sendTokens(owner, to, amount);
+        this.balancesContract.sendTokens(owner, to, amount);
     }
 }
