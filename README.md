@@ -62,14 +62,27 @@ graph TD
 
 ```
 
-### API 2
+### Phone Number api
 
 ```mermaid
-sequenceDiagram
-    participant User
-    participant API2
-    User->>API2: Request Data
-    API2->>User: Respond with Data
+graph TD
+    A[Start] -->|getVerificationCode| C[Generate Challenge Code]
+    C --> D[Store Code with Phone Number]
+    D --> E[Return Challenge Code]
+    C -->|Error| F[Error in Challenge Code Generation]
+
+    A -->|verifyCode| G[Find Phone Number with Code]
+    G -->|Matching Phone Number| H[Prepare Fields for Signing]
+    G -->|No Matching Phone Number| I[Return Phone Number Error]
+    H --> J[Call signFields]
+    J --> K[Return Signed Data]
+    H -->|Error| L[Error in Data Processing]
+    J -->|Error| M[Error in Signing Process]
+
+    A -->|signFields| N[Generate Signature]
+    N -->|Verify Signature| O[Verify and Return Signature]
+    N -->|Error| P[Error in Signature Generation]
+
 ```
 
 ### Web/Mobile App
