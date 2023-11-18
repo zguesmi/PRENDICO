@@ -14,7 +14,7 @@ import { inject } from 'tsyringe';
 import { Balances } from './balances';
 import { Admin } from './admin';
 
-export const ADMIN_INITIAL_BALANCE = 10n;
+export const ADMIN_INITIAL_BALANCE = 1000n;
 
 export class CompensationPublicOutput extends Struct({
     disasterOraclePublicKey: PublicKey,
