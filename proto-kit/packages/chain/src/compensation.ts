@@ -152,10 +152,9 @@ export class Compensation extends RuntimeModule<CompensationConfig> {
         // assert(isNullifierUsed.value.not(), 'Nullifier has already been used');
         // this.nullifiers.set(compensationProof.publicOutput.nullifier, Bool(true));
 
-        // TODO use correct addresses.
-        const owner: PublicKey = this.adminContract.admin.get().value;
+        const admin: PublicKey = this.adminContract.admin.get().value;
         const to: PublicKey = compensationProof.publicOutput.beneficiary;
         const amount: UInt64 = UInt64.from(compensationProof.publicOutput.amount);
-        this.balancesContract.sendTokens(owner, to, amount);
+        this.balancesContract.sendTokens(admin, to, amount);
     }
 }
