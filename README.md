@@ -118,54 +118,47 @@ graph TD
 
 ```mermaid
 graph TD
-    A[Start] -->|getVerificationCode| C[Generate Challenge Code]
-    C --> D[Store Code with Phone Number]
-    D --> E[Return Challenge Code]
-    C -->|Error| F[Error in Challenge Code Generation]
+    A[Start: Get Verification Code] --> B[Create Twilio Client]
+    B --> C[Send SMS via Twilio]
+    C -->|Success| D[Return Verification Status]
+    C -->|Error| E[Handle SMS Sending Error]
 
-    A -->|verifyCode| G[Find Phone Number with Code]
-    G -->|Matching Phone Number| H[Prepare Fields for Signing]
-    G -->|No Matching Phone Number| I[Return Phone Number Error]
-    H --> J[Call signFields]
-    J --> K[Return Signed Data]
-    J -->|Error| L[Error in Signing Process]
-    H -->|Error| M[Error in Data Processing]
-
-    J --> N[signFields: Generate Signature]
-    N -->|Verify Signature| O[Verify and Return Signature]
-    N -->|Error| P[Error in Signature Generation]
-
-
+    F[Start: Verify Code] --> G[Create Twilio Client for Verification]
+    G --> H[Check Code via Twilio]
+    H -->|Code Valid| I[Prepare Fields for Signing]
+    H -->|Code Invalid| J[Return Invalid Code Error]
+    I --> K[Generate a Proof]
+    K -->|Error| L[Handle Proof Error]
+    K --> M[Return Proof data]
+    H -->|Error| N[Handle Verification Error]
 ```
 
 ## Disaster API Overview
-
-The Disaster API, built with NestJS, provides disaster-related responses and potential compensation based on the user's location. It fetches disaster data from external sources and uses cryptographic methods for secure responses.
+The Disaster API, developed using NestJS, is tailored to offer prompt responses and potential compensation in regions impacted by natural disasters. It employs external data sources for disaster information and cryptographic techniques for secured responses.
 
 ### Endpoints
 
-- **`GET /disaster`**: Determines if a user is in a disaster-affected region using their IP and session ID. It fetches external disaster data, verifies against set criteria, and returns a digitally-signed response.
+- **`GET /disaster`**: This endpoint assesses if a user, identified by their IP address and session ID, is in an area affected by a disaster. It fetches and analyzes disaster data from external sources, applying set criteria, and provides a digitally-signed response based on these findings.
 
 ### Core Functions
 
-- **`getDisaster`**: Checks for disasters in the user's location, prepares a response with session and disaster details, and signs it for security.
-- **`getCountryCode`**: Retrieves the user's country from their IP address.
-- **`signFields`**: Generates a digital signature for the response, ensuring data integrity and authenticity.
+- **`getDisaster`**: Orchestrates the process of disaster detection and response preparation. It involves fetching and parsing disaster data, checking for disasters, fetching localization from IP, and preparing and signing compensation data.
+- **`getCountryCode`**: Determines the user's country code based on their IP address, essential in the disaster validation process.
+- **`signFields`**: Ensures the integrity and authenticity of the response by generating a digital signature.
 
 ## Phone API Overview
-
-The Phone API, created with NestJS, manages phone number verification and authentication.
+The Phone API, also built with NestJS, now integrates with Twilio for enhanced phone number verification and authentication, ensuring secure user interactions.
 
 ### Endpoints
 
-- **`GET /verificationcode`**: Initiates phone verification by generating and storing a challenge code for a given phone number.
-- **`GET /verifycode`**: Verifies the received challenge code against the stored one, and generates a signed response for successful matches.
+- **`GET /verificationcode`**: Initiates the phone number verification process. It sends an SMS with a verification code to the provided phone number using Twilio's services.
+- **`GET /verifycode`**: This endpoint validates the received verification code against Twilio's records and, if successful, generates a digitally signed response.
 
 ### Core Functions
 
-- **`getVerificationCode`**: Generates a verification code for a phone number.
-- **`verifyCode`**: Checks the verification code and returns a signed response upon successful validation.
-- **`signFields`**: Creates a digital signature using the user's session data and Mina Signer client.
+- **`getVerificationCode`**: Utilizes Twilio to send a verification code via SMS to the user's phone number, marking the beginning of the verification process.
+- **`verifyCode`**: Validates the submitted verification code with Twilio. Upon successful validation, it prepares and signs a response containing user session data.
+- **`signFields`**: Generates a digital signature for the verification data, leveraging the Mina Signer client to ensure security and reliability.
 
 ### Web/Mobile App
 //TODO
