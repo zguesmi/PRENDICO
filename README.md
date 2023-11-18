@@ -2,22 +2,12 @@
   <tr>
     <!-- First Image -->
     <td style="border: none;">
-      <img src="/images/UNICEF_logo.png" alt="UNICEF" style="width: 100%;">
-    </td>
-    <td style="border: none;">
-      <img src="/images/mina-logo.png" alt="Mina logo" style="width: 100%;">
+      <img src="/images/PRENDICO.png" alt="PRENDICO" style="width: 100%;">
     </td>
   </tr>
 </table>
 
-
-# PRENDICO: Privacy-Enabled Disaster Compensation
-
 This document provides an overview of the project architecture and components.
-
-Here's how you can integrate the provided descriptions into your README:
-
----
 
 ## Short Description
 Our project enables fast post-disaster financial assistance via cryptocurrency, ensuring end-to-end privacy with zero knowledge proof. By focusing on scalability, digital and financial inclusion, we are leveraging web3 technologies to support those who have lost everything.
