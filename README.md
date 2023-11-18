@@ -4,6 +4,8 @@ This document provides an overview of the project architecture and components.
 
 ## System Components
 
+![PRENDICO macro diagram](/images/macro-diagram.png "PRENDICO macro diagram")
+
 ### Protokit App Chain
 
 ```mermaid
