@@ -43,14 +43,28 @@ classDiagram
     Compensation --|> Admin
 ```
 
-### API 1
+### Disaster API 
 
 ```mermaid
-sequenceDiagram
-    participant User
-    participant API1
-    User->>API1: Request Data
-    API1->>User: Respond with Data
+graph TD
+    A[Start] -->|getHello| B[Return 'hello']
+    A -->|getDisaster| C[Fetch Disaster Data]
+    C --> D[Parse XML to JSON]
+    D --> E[Check for Disaster]
+    E -->|Disaster Exists| F[Prepare Compensation Data]
+    E -->|No Disaster| G[Return Error]
+    F -->|Sign Fields| H[Sign and Verify Fields]
+    H --> I[Return Signed Data]
+    C -->|Error| J[Error in Data Fetching]
+    H -->|Error| K[Error in Signing]
+
+    A -->|getCountryCode| L[Fetch Country Code]
+    L -->|Error| M[Error in Country Code Fetching]
+
+    A -->|signFields| N[Sign Data]
+    N -->|Verify Fields| O[Verify and Return Signature]
+    N -->|Error| P[Error in Signing]
+
 ```
 
 ### API 2
