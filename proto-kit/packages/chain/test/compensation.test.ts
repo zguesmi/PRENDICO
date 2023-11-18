@@ -102,37 +102,35 @@ describe('Compensation', () => {
         expect(newAdmin).toEqual(newAdminPublicKey);
     }, 1_000_000);
 
-    // it('should fail to change admin to the contract',async ()=> {
-    //     const randomAddress = PrivateKey.random().toPublicKey();
-    //     const tx = await appChain.transaction(alice, () => {
-    //         compensation.setAdmin(randomAddress
-    //         );
-    //     });
-    //     await tx.sign();
-    //     await tx.send();
-    //     const block = await appChain.produceBlock();
+    it('should fail to change admin to the contract if not admin sender', async ()=> {
+        const adminPublicKey = alice;
+        const tx = await appChain.transaction(alice, () => {
+            compensation.setAdmin(adminPublicKey);
+        });
+        await tx.sign();
+        await tx.send();
+        const block = await appChain.produceBlock();
 
-    //     const adminAfter = await appChain.query.runtime.Admin.admin.get();
-    //     expect(block?.txs[0].status).toBe(true);
-    //     expect(adminAfter).toEqual(alice);
+        const adminAfter = await appChain.query.runtime.Admin.admin.get();
+        expect(block?.txs[0].status).toBe(true);
+        expect(adminAfter).toEqual(adminPublicKey);
 
-    //     const bobPrivateKey = PrivateKey.random();
-    //     const bob = bobPrivateKey.toPublicKey();
-    //     appChain.setSigner(bobPrivateKey);
+        const bobPrivateKey = PrivateKey.random();
+        const bob = bobPrivateKey.toPublicKey();
+        appChain.setSigner(bobPrivateKey);
 
-    //     const tx2 = await appChain.transaction(bob, () => {
-    //         compensation.changeAdmin(randomAddress
-    //         );
-    //     });
-    //     await tx2.sign();
-    //     await tx2.send();
-    //     const block2 = await appChain.produceBlock();
+        const tx2 = await appChain.transaction(bob, () => {
+            compensation.changeAdmin(adminPublicKey);
+        });
+        await tx2.sign();
+        await tx2.send();
+        const block2 = await appChain.produceBlock();
+        expect(block2?.txs[0].status).toBe(false);
+        expect(block2?.txs[0].statusMessage).toBe("You are not the admin");
 
-    //     const newAdmin = await appChain.query.runtime.Admin.admin.get();
-    //     expect(block2?.txs[0].status).toBe(false);
-    //     expect(newAdmin).toEqual(alice);
-    //     expect(block2?.txs[0].statusMessage).toBe("You are not the admin");
-    // },1_000_000);
+        const newAdmin = await appChain.query.runtime.Admin.admin.get();
+        expect(newAdmin).toEqual(adminPublicKey);
+    }, 1_000_000);
 
     it('should setup oracles public keys', async () => {
         const adminPublicKey = alice;
