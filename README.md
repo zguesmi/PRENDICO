@@ -1,10 +1,11 @@
 <table style="border-collapse: collapse; width: 100%;">
   <tr>
     <!-- First Image -->
-    <td style="border: none;">
+    <td style="border: none; width: 50%;">
       <img src="/images/UNICEF_logo.png" alt="UNICEF" style="width: 100%;">
     </td>
-    <td style="border: none;">
+    <!-- Second Image -->
+    <td style="border: none; width: 50%;">
       <img src="/images/mina-logo.png" alt="Mina logo" style="width: 100%;">
     </td>
   </tr>
