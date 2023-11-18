@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import { TestingAppChain } from '@proto-kit/sdk';
-import { PrivateKey, PublicKey, UInt64 } from 'o1js';
+import { Field, PrivateKey, PublicKey, Signature, UInt64 } from 'o1js';
 import { Balances } from '../src/balances';
 import { Admin } from '../src/admin';
 import { Compensation, CompensationProof, CompensationPublicOutput, canClaim } from '../src/compensation';
@@ -190,11 +190,51 @@ describe('Compensation', () => {
     }, 1_000_000);
 
     it('should allow claiming if a valid proof is provided', async () => {
+        // Setup admin.
+        const randomAddress = PrivateKey.random().toPublicKey();
+        const setupAdminTx = await appChain.transaction(alice, () => {
+            compensation.setAdmin(randomAddress
+            );
+        });
+        await setupAdminTx.sign();
+        await setupAdminTx.send();
+        await appChain.produceBlock();
+        // Setup public keys.
+        const setupKeysTx = await appChain.transaction(alice, () => {
+            compensation.setupPublicKeys(
+                PublicKey.fromBase58(DISASTER_ORACLE_PUBLIC_KEY),
+                PublicKey.fromBase58(PHONE_ORACLE_PUBLIC_KEY),
+            );
+        });
+        await setupKeysTx.sign();
+        await setupKeysTx.send();
+        await appChain.produceBlock();
+        // Create claim proof.
         // const nullifier = Nullifier.fromJSON(Nullifier.createTestNullifier(message, aliceKey));
-
+        const disasterOraclePublicKey = await appChain.query.runtime.Compensation.disasterOraclePublicKey.get();
+        const phoneOraclePublicKey = await appChain.query.runtime.Compensation.phoneOraclePublicKey.get();
+        const disasterId = Field(1);
+        const userSessionId: Field = Field(2)
+        const amount: Field = Field(3);
+        const disasterOracleSignatureSalt: Field = Field(4);
+        const disasterOracleSignature: Signature = Signature.create(PrivateKey.fromBase58(DISASTER_ORACLE_PRIVATE_KEY), [
+            disasterId,
+            userSessionId,
+            amount,
+            disasterOracleSignatureSalt,
+        ]);
+        const phoneNumber: Field = Field(5);
+        const phoneOracleSignatureSalt: Field = Field(6);
+        const phoneOracleSignature: Signature = Signature.create(PrivateKey.fromBase58(PHONE_ORACLE_PRIVATE_KEY), [
+            userSessionId,
+            phoneNumber,
+            phoneOracleSignatureSalt,
+        ]);
+        const beneficiary: PublicKey = PrivateKey.random().toPublicKey();
         const compensationProof = await mockProof(canClaim(
-            disasterOraclePublicKey,
-            phoneOraclePublicKey,
+            // keys
+            disasterOraclePublicKey || PublicKey.empty(),
+            phoneOraclePublicKey || PublicKey.empty(),
             // disaster
             disasterId,
             userSessionId,
@@ -207,26 +247,28 @@ describe('Compensation', () => {
             phoneOracleSignature,
             // victim's pubkey
             beneficiary,
-            nullifier,
+            // nullifier,
         ));
-
-        const tx = appChain.transaction(alice, () => {
+        // Claim
+        // Check balances before.
+        const beneficiaryBalanceBefore = await appChain.query.runtime.Balances.balances.get(beneficiary);
+        expect(beneficiaryBalanceBefore).toEqual(UInt64.zero);
+        const claimTx = await appChain.transaction(alice, () => {
             compensation.claim(compensationProof);
         });
-
-        await tx.sign();
-        await tx.send();
-
+        await claimTx.sign();
+        await claimTx.send();
         const block = await appChain.produceBlock();
-
-        const storedNullifier = await appChain.query.runtime.Compensation.nullifiers.get(
-            compensationProof.publicOutput.nullifier
-        );
-        const balance = await appChain.query.runtime.Balances.balances.get(alice);
-
         expect(block?.txs[0].status).toBe(true);
-        expect(storedNullifier?.toBoolean()).toBe(true);
-        expect(balance?.toBigInt()).toBe(1000n);
+        // Check balances after.
+        const beneficiaryBalanceAfter = await appChain.query.runtime.Balances.balances.get(beneficiary);
+        expect(beneficiaryBalanceAfter).toEqual(UInt64.from(3));
+        // const balance = await appChain.query.runtime.Balances.balances.get(alice);
+        // expect(balance?.toBigInt()).toBe(1000n);
+        // const storedNullifier = await appChain.query.runtime.Compensation.nullifiers.get(
+        //     compensationProof.publicOutput.nullifier
+        // );
+        // expect(storedNullifier?.toBoolean()).toBe(true);
     });
 
     // it('should not allow claiming if a spent nullifier is used', async () => {
