@@ -28,8 +28,10 @@ To establish the user's eligibility, a two-step identity verification process is
 The next crucial step involves proving the user's presence in a disaster zone. Utilizing the GDACS API, the system locates the user and verifies its eligibility. A cryptographic proof is also generated, signed with the API's private key, ensuring that the user is genuinely within a disaster zone. The lightweight Mina Blockchain, with its Zero-Knowledge proof capabilities, securely stores and verifies these proofs, maintaining the anonymity of the victim.
 
 The culmination of this process occurs within a smart contract on the Mina Blockchain. The system verifies both proofs using their public keys, ensuring the integrity of the information. If the aggregation of these details is accurate, the financial transfer is executed, providing compensation to the eligible individual.
+
 Hacky Innovations:
 While maintaining the highest standards of security and privacy, we embraced innovative solutions. Notably, the use of Mina Blockchain's lightweight design allowed us to ensure efficient and scalable operations, enhancing the overall performance of the compensation process.
+
 ---
 
 This structure maintains a comprehensive overview of your project, highlighting its key aspects, privacy commitment, technological integration, and innovative solutions.
