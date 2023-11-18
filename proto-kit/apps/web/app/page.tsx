@@ -1,5 +1,7 @@
 "use client";
 import { Faucet } from "@/components/faucet";
+// Causes the error:
+// Cannot find module '@/components/transfer' or its corresponding type declarations
 // import { Transfer } from "@/components/transfer";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
