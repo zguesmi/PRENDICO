@@ -31,7 +31,6 @@ export default function FormOne({ onNextStep, userId }: FormProps) {
       /^(\+\d{1,2}\s?)?(\(\d{1,4}\)|\d{1,4})\s?\d{1,15}$/.test(
         identityNumber.trim()
       );
-    console.log(isValidPhoneNumber);
     if (!isValidPhoneNumber) {
       setPhoneNumberError("Invalid phone number");
       setLoading(false);

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import {
   Box,
   Paper,
@@ -11,14 +11,13 @@ import FormOne from "./forms/formOne";
 import FormTwo from "./forms/formTwo";
 import FormThree from "./forms/formThree";
 
-type FormProps = {
-  onNextStep: () => void;
-  userId: number;
-};
-
 export default function MultiStepForm() {
   const [step, setStep] = useState(0);
-  const userId = Math.floor(Math.random() * 1_000_000) + 1;
+  const userId = useMemo(
+    () => Math.floor(Math.random() * 1_000_000_000) + 1,
+    []
+  );
+  console.log("New UserId", userId);
 
   const handleNextStep = () => {
     setStep((prevStep) => prevStep + 1);
