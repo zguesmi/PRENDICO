@@ -18,6 +18,7 @@ export class CompensationPublicOutput extends Struct({
     disasterOraclePublicKey: PublicKey,
     phoneOraclePublicKey: PublicKey,
     amount: Field,
+    beneficiary: PublicKey,
     nullifier: Field, //TODO: Rename?
 }) {}
 
@@ -40,6 +41,7 @@ export function canClaim(
     phoneOracleSignatureSalt: Field,
     phoneOracleSignature: Signature,
     // victim's pubkey
+    beneficiary: PublicKey,
     nullifier: Nullifier
 ): CompensationPublicOutput {
     // Verify disaster oracle authorization.
@@ -65,6 +67,7 @@ export function canClaim(
         disasterOraclePublicKey,
         phoneOraclePublicKey,
         amount,
+        beneficiary,
         nullifier: nullifier.key(),
     });
 }
@@ -84,6 +87,7 @@ export const compensationZkProgram = Experimental.ZkProgram({
                 Field, // phoneNumber
                 Field, // phoneOracleSignatureSalt
                 Signature, // phoneOracleSignature
+                PublicKey, // beneficiary
                 Nullifier, // hash(disasterId, phoneNumber) ??
             ],
             method: canClaim,
@@ -148,8 +152,7 @@ export class Compensation extends RuntimeModule<CompensationConfig> {
 
         // TODO use correct addresses.
         const owner: PublicKey = this.adminContract.admin.get().value;
-        // compensationProof.publicOutput.nullifier.getPublicKey();
-        const to: PublicKey = PublicKey.empty();
+        const to: PublicKey = compensationProof.publicOutput.beneficiary;
         const amount: UInt64 = UInt64.from(compensationProof.publicOutput.amount);
         this.balancesContract.sendTokens(owner, to, amount);
     }
