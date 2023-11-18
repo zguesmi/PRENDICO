@@ -6,14 +6,14 @@ This repository is a monorepo aimed at kickstarting application chain developmen
 
 The monorepo contains 1 package and 1 app:
 
-- `packages/chain` contains everything related to your app-chain
-- `apps/web` contains a demo UI that connects to your locally hosted app-chain sequencer
+-   `packages/chain` contains everything related to your app-chain
+-   `apps/web` contains a demo UI that connects to your locally hosted app-chain sequencer
 
 **Prerequisites:**
 
-- Node.js v18
-- pnpm
-- nvm
+-   Node.js v18
+-   pnpm
+-   nvm
 
 > If you're on windows, please use Docker until we find a more suitable solution to running the `@proto-kit/cli`.
 > Run the following command and then proceed to "Running the sequencer & UI":
