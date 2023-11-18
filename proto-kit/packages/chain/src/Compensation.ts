@@ -94,7 +94,7 @@ export const compensationZkProgram = Experimental.ZkProgram({
 
 export class CompensationProof extends Experimental.ZkProgram.Proof(compensationZkProgram) {}
 
-type CompensationConfig = Record<string, never>;
+interface CompensationConfig {}
 
 @runtimeModule()
 export class Compensation extends RuntimeModule<CompensationConfig> {
