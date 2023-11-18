@@ -46,12 +46,12 @@ export function canClaim(
   phoneOracleSignatureSalt: Field,
   phoneOracleSignature: Signature,
   // victim's pubkey
-  nullifier: Nullifier
+  nullifier: Nullifier,
 ): CompensationPublicOutput {
   // Verify disaster oracle authorization.
   const isValidDisasterAuth = disasterOracleSignature.verify(
     disasterOraclePublicKey,
-    [disasterId, userSessionId, amount, disasterOracleSignatureSalt]
+    [disasterId, userSessionId, amount, disasterOracleSignatureSalt],
   );
   isValidDisasterAuth.assertTrue("Invalid disaster oracle authorization");
 
@@ -96,7 +96,7 @@ export const compensationZkProgram = Experimental.ZkProgram({
 });
 
 export class CompensationProof extends Experimental.ZkProgram.Proof(
-  compensationZkProgram
+  compensationZkProgram,
 ) {}
 
 type CompensationConfig = Record<string, never>;
@@ -114,7 +114,7 @@ export class Compensation extends RuntimeModule<CompensationConfig> {
   @runtimeMethod()
   public setupPublicKeys(
     disasterOraclePublicKey: PublicKey,
-    phoneOraclePublicKey: PublicKey
+    phoneOraclePublicKey: PublicKey,
   ) {
     this.disasterOraclePublicKey.set(disasterOraclePublicKey);
     this.phoneOraclePublicKey.set(phoneOraclePublicKey);
@@ -127,20 +127,20 @@ export class Compensation extends RuntimeModule<CompensationConfig> {
     assert(
       Bool(
         compensationProof.publicOutput.disasterOraclePublicKey ==
-          this.disasterOraclePublicKey.get().value
+          this.disasterOraclePublicKey.get().value,
       ),
-      "Unknown disasterOraclePublicKey from proof"
+      "Unknown disasterOraclePublicKey from proof",
     );
     assert(
       Bool(
         compensationProof.publicOutput.phoneOraclePublicKey ==
-          this.phoneOraclePublicKey.get().value
+          this.phoneOraclePublicKey.get().value,
       ),
-      "Unknown phoneOraclePublicKey from proof"
+      "Unknown phoneOraclePublicKey from proof",
     );
 
     const isNullifierUsed = this.nullifiers.get(
-      compensationProof.publicOutput.nullifier
+      compensationProof.publicOutput.nullifier,
     );
 
     assert(isNullifierUsed.value.not(), "Nullifier has already been used");
