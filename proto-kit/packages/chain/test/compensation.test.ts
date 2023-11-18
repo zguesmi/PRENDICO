@@ -184,7 +184,8 @@ describe('Compensation', () => {
         });
         await setupAdminTx.sign();
         await setupAdminTx.send();
-        await appChain.produceBlock();
+        const setupAdminBlock = await appChain.produceBlock();
+        expect(setupAdminBlock?.txs[0].status).toBe(true);
         // Setup public keys.
         const setupKeysTx = await appChain.transaction(alice, () => {
             compensation.setupPublicKeys(
@@ -201,7 +202,7 @@ describe('Compensation', () => {
         const disasterOraclePublicKey = await appChain.query.runtime.Compensation.disasterOraclePublicKey.get();
         const phoneOraclePublicKey = await appChain.query.runtime.Compensation.phoneOraclePublicKey.get();
         const disasterId = Field(1);
-        const userSessionId: Field = Field(2)
+        const userSessionId: Field = Field(2);
         const amount: Field = Field(3);
         const disasterOracleSignatureSalt: Field = Field(4);
         const disasterOracleSignature: Signature = Signature.create(PrivateKey.fromBase58(DISASTER_ORACLE_PRIVATE_KEY), [

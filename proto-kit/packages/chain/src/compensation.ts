@@ -152,7 +152,7 @@ export class Compensation extends RuntimeModule<CompensationConfig> {
         // assert(isNullifierUsed.value.not(), 'Nullifier has already been used');
         // this.nullifiers.set(compensationProof.publicOutput.nullifier, Bool(true));
 
-        const admin: PublicKey = this.adminContract.admin.get().value;
+        const from: PublicKey = this.adminContract.admin.get().value;
         const to: PublicKey = compensationProof.publicOutput.beneficiary;
         const amount: UInt64 = UInt64.from(compensationProof.publicOutput.amount);
         this.balancesContract.sendTokens(admin, to, amount);
