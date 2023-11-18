@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import GradientBG from "../components/GradientBG.js";
 import {
   AppBar,
