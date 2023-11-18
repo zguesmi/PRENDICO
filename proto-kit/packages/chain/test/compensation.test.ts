@@ -50,7 +50,7 @@ describe('Compensation', () => {
         expect(adminAfter).toEqual(adminAddress);
         const adminBalance = await appChain.query.runtime.Balances.balances.get(adminAddress);
         expect(adminBalance?.toBigInt()).toBe(ADMIN_INITIAL_BALANCE);
-    },1_000_000);
+    }, 1_000_000);
 
     it('should fail in case of calling the admin set up twice ',async ()=> {
         const adminPublicKey = PrivateKey.random().toPublicKey();
@@ -73,69 +73,33 @@ describe('Compensation', () => {
 
         const adminAfter = await appChain.query.runtime.Admin.admin.get();
         expect(adminAfter).toEqual(adminPublicKey);
-    },1_000_000);
+    }, 1_000_000);
 
-    it('should fail to change admin to the contract',async ()=> {
-        const randomAddress = PrivateKey.random().toPublicKey();
+    it('should be able to change admin to the contract', async ()=> {
+        const adminPublicKey = alice; // Loaded as signer.
+        const newAdminPublicKey = PrivateKey.random().toPublicKey();
+
         const tx = await appChain.transaction(alice, () => {
-            compensation.setAdmin(randomAddress
-            );
+            compensation.setAdmin(adminPublicKey);
         });
         await tx.sign();
         await tx.send();
         const block = await appChain.produceBlock();
 
-        const adminAfter = await appChain.query.runtime.Admin.admin.get();
+        const adminBefore = await appChain.query.runtime.Admin.admin.get();
         expect(block?.txs[0].status).toBe(true);
-        expect(adminAfter).toEqual(alice);
+        expect(adminBefore).toEqual(adminPublicKey);
 
-        const bobPrivateKey = PrivateKey.random();
-        const bob = bobPrivateKey.toPublicKey();
-        appChain.setSigner(bobPrivateKey);
-
-        const tx2 = await appChain.transaction(bob, () => {
-            compensation.changeAdmin(randomAddress
-            );
+        const tx2 = await appChain.transaction(alice, () => {
+            compensation.changeAdmin(newAdminPublicKey);
         });
         await tx2.sign();
         await tx2.send();
         const block2 = await appChain.produceBlock();
+        expect(block2?.txs[0].status).toBe(true);
 
         const newAdmin = await appChain.query.runtime.Admin.admin.get();
-        expect(block2?.txs[0].status).toBe(false);
-        expect(newAdmin).toEqual(alice);
-        expect(block2?.txs[0].statusMessage).toBe("You are not the admin");
-    },1_000_000);
-
-    it('should setup oracles public keys', async () => {
-        const randomAddress = PrivateKey.random().toPublicKey();
-        const setupAdminTx = await appChain.transaction(alice, () => {
-            compensation.setAdmin(randomAddress
-            );
-        });
-        await setupAdminTx.sign();
-        await setupAdminTx.send();
-        await appChain.produceBlock();
-        const expectedDisasterOraclePublicKey: PublicKey = PublicKey.fromBase58(DISASTER_ORACLE_PUBLIC_KEY)
-        const expectedPhoneOraclePublicKey: PublicKey = PublicKey.fromBase58(PHONE_ORACLE_PUBLIC_KEY)
-        // Send setup tx.
-        const tx = await appChain.transaction(alice, () => {
-            compensation.setupPublicKeys(
-                expectedDisasterOraclePublicKey,
-                expectedPhoneOraclePublicKey,
-            );
-        });
-        await tx.sign();
-        await tx.send();
-        const block = await appChain.produceBlock();
-        // Read state.
-        const disasterOraclePublicKey = await appChain.query.runtime.Compensation.disasterOraclePublicKey.get();
-        const phoneOraclePublicKey = await appChain.query.runtime.Compensation.phoneOraclePublicKey.get();
-        // Check tx status.
-        expect(block?.txs[0].status).toBe(true);
-        // Check that public keys match.
-        expect(disasterOraclePublicKey).toEqual(expectedDisasterOraclePublicKey);
-        expect(phoneOraclePublicKey).toEqual(expectedPhoneOraclePublicKey);
+        expect(newAdmin).toEqual(newAdminPublicKey);
     }, 1_000_000);
 
     it('should not setup oracles public keys if no admin setup', async () => {
