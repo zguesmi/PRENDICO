@@ -106,17 +106,17 @@ classDiagram
 ```mermaid
 graph TD
     A[Start getDisaster] --> B[Fetch Disaster Data]
-    B -->|Error| Z[Handle Fetch Error]
-    B --> C[Parse XML to JSON]
     B --> G[Call getCountryCode]
+    G --> C[Parse XML to JSON]
     C -->|Error| Y[Handle Parse Error]
     C --> D[Check for Disaster]
     D -->|Disaster Exists| E[Prepare Compensation Data]
     D -->|No Disaster| F[Return No Disaster Error]
-    G -->|Error| X[Handle Country Code Error]
-    G --> H[Call signFields]
+    E --> H[Call signFields]
     H -->|Error| W[Handle Signing Error]
     H --> I[Return Signed Data]
+    G -->|Error| X[Handle Country Code Error]
+    B -->|Error| Z[Handle Fetch Error]
 
 ```
 
@@ -174,6 +174,7 @@ The Phone API, created with NestJS, manages phone number verification and authen
 - **`signFields`**: Creates a digital signature using the user's session data and Mina Signer client.
 
 ### Web/Mobile App
+//TODO
 
 ```mermaid
 sequenceDiagram
@@ -184,7 +185,7 @@ sequenceDiagram
 ```
 
 ### Interaction Between Components
-
+//TODO
 ```mermaid
 sequenceDiagram
     participant ProtokitAppChain
