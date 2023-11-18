@@ -1,6 +1,6 @@
 import { RuntimeModule, runtimeModule, state, runtimeMethod } from '@proto-kit/module';
 import { State, StateMap, assert } from '@proto-kit/protocol';
-import { AccountUpdate, Bool, Field, PublicKey, UInt64 } from 'o1js';
+import { Bool, PublicKey, UInt64 } from 'o1js';
 
 interface BalancesConfig {
     totalSupply: UInt64;
