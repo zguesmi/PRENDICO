@@ -1,0 +1,7 @@
+@startuml
+:ProtokitAppChain: as "Protokit App Chain"
+:API1: as "API 1"
+:API2: as "API 2"
+:WebMobileApp: as "Web/Mobile App"
+
+@enduml
