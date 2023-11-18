@@ -10,12 +10,12 @@ import { dummyBase64Proof } from 'o1js/dist/node/lib/proof_system';
 // log.setLevel('ERROR');
 
 // Public keys of trusted oracles.
-const DISASTER_ORACLE_PRIVATE_KEY = 'EKEZhdmk9PdHzo8rskB16o1EBeMs6RpQLB1otLoZHsnCEVMwaTsT';
-const DISASTER_ORACLE_PUBLIC_KEY = 'B62qm9E2G2cLYEtzB9uEqUuqThPzYcZrkWseHTDMnuUUT7vF16DixJz';
+const DISASTER_ORACLE_PRIVATE_KEY = 'EKDzXrLyjHVJgsXH6sXx4CJ6cqZqEwst8Vhds9k4H1Fo6AzQBtvH';
+const DISASTER_ORACLE_PUBLIC_KEY = 'B62qqLzJcD4R8uSuZXuAyhFRc6BqALqQ7g2LhV8Xe8ZpmDH1JrueqdB';
 
 const PHONE_ORACLE_PRIVATE_KEY =
-'EKFNBDtpm19utD529fkp22STibDyEQh8HQ9gnKGuevxf2kNm2eZG';
-const PHONE_ORACLE_PUBLIC_KEY = 'B62qpJPFCQkgorM4eLVgnYjeZAZugfns6jxENYcbAoetkkY2zLgpire';
+'EKEWUJzR4RAH6VajUv5Ni9mGs3Sc7gf9Xrp5qctPJh4kZw362kak';
+const PHONE_ORACLE_PUBLIC_KEY = 'B62qnHWT9s9YiyzDBvEKKii4ocyjd5sujP9KCojK6BcCoHV6wujDBQo';
 
 describe('Compensation', () => {
 
@@ -37,7 +37,7 @@ describe('Compensation', () => {
 
     it('should setup oracles public keys', async () => {
         const expectedDisasterOraclePublicKey: PublicKey = PublicKey.fromBase58(DISASTER_ORACLE_PUBLIC_KEY)
-        const expectedPhoneOraclePublicKey: PublicKey = PublicKey.fromBase58(PHONE_ORACLE_PRIVATE_KEY)
+        const expectedPhoneOraclePublicKey: PublicKey = PublicKey.fromBase58(PHONE_ORACLE_PUBLIC_KEY)
         // Send setup tx.
         const tx = await appChain.transaction(alice, () => {
             compensation.setupPublicKeys(
