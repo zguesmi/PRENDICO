@@ -7,14 +7,7 @@
   </tr>
 </table>
 
-
-# PRENDICO: Privacy-Enabled Disaster Compensation
-
 This document provides an overview of the project architecture and components.
-
-Here's how you can integrate the provided descriptions into your README:
-
----
 
 ## Short Description
 Our project enables fast post-disaster financial assistance via cryptocurrency, ensuring end-to-end privacy with zero knowledge proof. By focusing on scalability, digital and financial inclusion, we are leveraging web3 technologies to support those who have lost everything.
