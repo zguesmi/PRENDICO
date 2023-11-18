@@ -116,6 +116,7 @@ export class Compensation extends RuntimeModule<CompensationConfig> {
     // add random input to prevent error
     public setAdmin(rndAddrr : PublicKey) {
         this.adminContract.setAdmin();
+        this.balancesContract.balances.set(this.adminContract.admin.get().value, UInt64.from(10));
     }
 
     @runtimeMethod()

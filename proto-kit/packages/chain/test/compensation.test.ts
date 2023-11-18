@@ -7,7 +7,6 @@ import { Compensation, CompensationProof, CompensationPublicOutput, canClaim } f
 import { log } from '@proto-kit/common';
 import { Pickles } from 'o1js/dist/node/snarky';
 import { dummyBase64Proof } from 'o1js/dist/node/lib/proof_system';
-import exp from 'constants';
 
 log.setLevel('ERROR');
 
@@ -39,18 +38,19 @@ describe('Compensation', () => {
     });
 
     it('should Add an admin to the contract',async ()=> {
-        const randomAddress = PrivateKey.random().toPublicKey();
+        const adminAddress = PrivateKey.random().toPublicKey();
         const tx = await appChain.transaction(alice, () => {
-            compensation.setAdmin(randomAddress
+            compensation.setAdmin(adminAddress
             );
         });
         await tx.sign();
         await tx.send();
         const block = await appChain.produceBlock();
-
-        const adminAfter = await appChain.query.runtime.Admin.admin.get();
         expect(block?.txs[0].status).toBe(true);
+        const adminAfter = await appChain.query.runtime.Admin.admin.get();
         expect(adminAfter).toEqual(alice);
+        const adminBalance = await appChain.query.runtime.Balances.balances.get(adminAddress);
+        expect(adminBalance).toEqual(UInt64.from(10));
     },1_000_000);
 
     it('should fail in case of calling the admin set up twice ',async ()=> {
