@@ -8,8 +8,8 @@ export class Admin extends RuntimeModule<unknown> {
 
   public setAdmin() {
     const admin = this.admin.get().value;
-    const isEmpyt = admin.isEmpty()
-    assert(isEmpyt,"Admin key is already set");
+    const isEmpty = admin.isEmpty()
+    assert(isEmpty,"Admin key is already set");
     this.admin.set(this.transaction.sender);
   }
 
