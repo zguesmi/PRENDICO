@@ -4,13 +4,10 @@ import {
     Bool,
     Experimental,
     Field,
-    MerkleMapWitness,
     Nullifier,
-    Poseidon,
     PublicKey,
     Signature,
     Struct,
-    UInt64,
 } from 'o1js';
 import { inject } from 'tsyringe';
 import { Balances } from './balances';
