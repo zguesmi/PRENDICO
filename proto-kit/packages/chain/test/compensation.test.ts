@@ -135,7 +135,7 @@ describe('Compensation', () => {
     // },1_000_000);
 
     it('should setup oracles public keys', async () => {
-        const adminPublicKey = PrivateKey.random().toPublicKey();
+        const adminPublicKey = alice;
         const setupAdminTx = await appChain.transaction(alice, () => {
             compensation.setAdmin(adminPublicKey);
         });
@@ -145,14 +145,14 @@ describe('Compensation', () => {
         // Send setup tx.
         const expectedDisasterOraclePublicKey: PublicKey = PublicKey.fromBase58(DISASTER_ORACLE_PUBLIC_KEY)
         const expectedPhoneOraclePublicKey: PublicKey = PublicKey.fromBase58(PHONE_ORACLE_PUBLIC_KEY)
-        const tx = await appChain.transaction(alice, () => {
+        const setupKeysTx = await appChain.transaction(alice, () => {
             compensation.setupPublicKeys(
                 expectedDisasterOraclePublicKey,
                 expectedPhoneOraclePublicKey,
             );
         });
-        await tx.sign();
-        await tx.send();
+        await setupKeysTx.sign();
+        await setupKeysTx.send();
         const block = await appChain.produceBlock();
         expect(block?.txs[0].status).toBe(true);
         // Check that public keys match.
