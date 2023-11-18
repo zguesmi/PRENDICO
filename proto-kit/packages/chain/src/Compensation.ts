@@ -14,6 +14,7 @@ import {
 } from 'o1js';
 import { inject } from 'tsyringe';
 import { Balances } from './balances';
+import { Admin } from './admin';
 
 export class CompensationPublicOutput extends Struct({
     disasterOraclePublicKey: PublicKey,
@@ -102,12 +103,25 @@ export class Compensation extends RuntimeModule<CompensationConfig> {
     @state() public phoneOraclePublicKey = State.from<PublicKey>(PublicKey);
     @state() public nullifiers = StateMap.from<Field, Bool>(Field, Bool);
 
-    public constructor(@inject('Balances') public balances: Balances) {
+    public constructor(@inject('Balances') public balances: Balances, @inject('Admin') public admin: Admin,) {
         super();
     }
 
     @runtimeMethod()
+    // add random input to prevent error
+    public setAdmin(rndAddrr : PublicKey) {
+        this.admin.setAdmin();
+    }
+
+    @runtimeMethod()
+    // add random input to prevent error
+    public changeAdmin(newAdmin : PublicKey) {
+        this.admin.changeAdmin(newAdmin);
+    }
+
+    @runtimeMethod()
     public setupPublicKeys(disasterOraclePublicKey: PublicKey, phoneOraclePublicKey: PublicKey) {
+        this.admin.OnlyAdmin()
         this.disasterOraclePublicKey.set(disasterOraclePublicKey);
         this.phoneOraclePublicKey.set(phoneOraclePublicKey);
     }
