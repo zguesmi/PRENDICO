@@ -246,8 +246,8 @@ describe('Compensation', () => {
         });
         await claimTx.sign();
         await claimTx.send();
-        const block = await appChain.produceBlock();
-        expect(block?.txs[0].status).toBe(true);
+        const claimBlock = await appChain.produceBlock();
+        expect(claimBlock?.txs[0].status).toBe(true);
         // Check balances after.
         const beneficiaryBalanceAfter = await appChain.query.runtime.Balances.balances.get(beneficiary);
         expect(beneficiaryBalanceAfter).toEqual(UInt64.from(3));
