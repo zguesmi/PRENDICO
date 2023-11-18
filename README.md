@@ -76,12 +76,13 @@ graph TD
     G -->|No Matching Phone Number| I[Return Phone Number Error]
     H --> J[Call signFields]
     J --> K[Return Signed Data]
-    H -->|Error| L[Error in Data Processing]
-    J -->|Error| M[Error in Signing Process]
+    J -->|Error| L[Error in Signing Process]
+    H -->|Error| M[Error in Data Processing]
 
-    A -->|signFields| N[Generate Signature]
+    J --> N[signFields: Generate Signature]
     N -->|Verify Signature| O[Verify and Return Signature]
     N -->|Error| P[Error in Signature Generation]
+
 
 ```
 
