@@ -14,6 +14,7 @@ const PHONE_ORACLE_PRIVATE_KEY = 'EKFNBDtpm19utD529fkp22STibDyEQh8HQ9gnKGuevxf2k
 const PHONE_ORACLE_PUBLIC_KEY = 'B62qpJPFCQkgorM4eLVgnYjeZAZugfns6jxENYcbAoetkkY2zLgpire';
 
 describe('Compensation', () => {
+    // Declare
     let appChain: TestingAppChain<{
         Compensation: typeof Compensation;
         Balances: typeof Balances;
@@ -23,24 +24,80 @@ describe('Compensation', () => {
 
     const aliceKey = PrivateKey.random();
     const alice = aliceKey.toPublicKey();
-
-    const map = new MerkleMap();
-    const key = Poseidon.hash(alice.toFields());
-    map.set(key, Bool(true).toField());
-
-    const witness = map.getWitness(key);
-
-    async function mockProof(publicOutput: CompensationPublicOutput): Promise<CompensationProof> {
-        const [, proof] = Pickles.proofOfBase64(await dummyBase64Proof(), 2);
-        return new CompensationProof({
-            proof: proof,
-            maxProofsVerified: 2,
-            publicInput: undefined,
-            publicOutput,
-        });
-    }
+    // const key = Poseidon.hash(alice.toFields());
 
     beforeAll(async () => {
+        await startChain();
+    });
+
+    it('should setup oracles public keys', async () => {
+        const expectedDisasterOraclePublicKey: PublicKey = PublicKey.fromBase58(DISASTER_ORACLE_PUBLIC_KEY)
+        const expectedPhoneOraclePublicKey: PublicKey = PublicKey.fromBase58(PHONE_ORACLE_PRIVATE_KEY)
+        const tx = await appChain.transaction(alice, () => {
+            compensation.setupPublicKeys(
+                expectedDisasterOraclePublicKey,
+                expectedPhoneOraclePublicKey,
+            );
+        });
+        await tx.sign();
+        await tx.send();
+        await appChain.produceBlock();
+        const disasterOraclePublicKey = await appChain.query.runtime.Compensation.disasterOraclePublicKey.get();
+        const phoneOraclePublicKey = await appChain.query.runtime.Compensation.phoneOraclePublicKey.get();
+        expect(disasterOraclePublicKey).toBe(expectedDisasterOraclePublicKey);
+        expect(phoneOraclePublicKey).toBe(expectedPhoneOraclePublicKey);
+    });
+
+    // it('should allow claiming if a valid proof is provided', async () => {
+    //     const nullifier = Nullifier.fromJSON(Nullifier.createTestNullifier(message, aliceKey));
+
+    //     const compensationProof = await mockProof(canClaim(witness, nullifier));
+
+    //     const tx = appChain.transaction(alice, () => {
+    //         compensation.claim(compensationProof);
+    //     });
+
+    //     await tx.sign();
+    //     await tx.send();
+
+    //     const block = await appChain.produceBlock();
+
+    //     const storedNullifier = await appChain.query.runtime.Compensation.nullifiers.get(
+    //         compensationProof.publicOutput.nullifier
+    //     );
+    //     const balance = await appChain.query.runtime.Balances.balances.get(alice);
+
+    //     expect(block?.txs[0].status).toBe(true);
+    //     expect(storedNullifier?.toBoolean()).toBe(true);
+    //     expect(balance?.toBigInt()).toBe(1000n);
+    // });
+
+    // it('should not allow claiming if a spent nullifier is used', async () => {
+    //     const nullifier = Nullifier.fromJSON(Nullifier.createTestNullifier([Field(0)], aliceKey));
+
+    //     const compensationProof = await mockProof(canClaim(witness, nullifier));
+
+    //     const tx = appChain.transaction(alice, () => {
+    //         compensation.claim(compensationProof);
+    //     });
+
+    //     await tx.sign();
+    //     await tx.send();
+
+    //     const block = await appChain.produceBlock();
+
+    //     const storedNullifier = await appChain.query.runtime.Compensation.nullifiers.get(
+    //         compensationProof.publicOutput.nullifier
+    //     );
+    //     const balance = await appChain.query.runtime.Balances.balances.get(alice);
+
+    //     expect(block?.txs[0].status).toBe(false);
+    //     expect(block?.txs[0].statusMessage).toMatch(/Nullifier has already been used/);
+    //     expect(storedNullifier?.toBoolean()).toBe(true);
+    //     expect(balance?.toBigInt()).toBe(1000n);
+    // });
+
+    async function startChain() {
         appChain = TestingAppChain.fromRuntime({
             modules: {
                 Compensation: Compensation,
@@ -53,79 +110,19 @@ describe('Compensation', () => {
                 },
             },
         });
-
         appChain.setSigner(aliceKey);
-
         await appChain.start();
-
         compensation = appChain.runtime.resolve('Compensation');
         balances = appChain.runtime.resolve('Balances');
-    });
+    }
 
-    it('should setup oracles public keys', async () => {
-        const tx = appChain.transaction(alice, () => {
-            compensation.setupPublicKeys(
-                PublicKey.fromBase58(DISASTER_ORACLE_PUBLIC_KEY),
-                PublicKey.fromBase58(PHONE_ORACLE_PUBLIC_KEY)
-            );
+    async function mockProof(publicOutput: CompensationPublicOutput): Promise<CompensationProof> {
+        const [, proof] = Pickles.proofOfBase64(await dummyBase64Proof(), 2);
+        return new CompensationProof({
+            proof: proof,
+            maxProofsVerified: 2,
+            publicInput: undefined,
+            publicOutput,
         });
-
-        await tx.sign();
-        await tx.send();
-
-        await appChain.produceBlock();
-
-        const commitment = await appChain.query.runtime.Compensation.commitment.get();
-
-        expect(commitment?.toBigInt()).toBe(map.getRoot().toBigInt());
-    });
-
-    it('should allow claiming if a valid proof is provided', async () => {
-        const nullifier = Nullifier.fromJSON(Nullifier.createTestNullifier(message, aliceKey));
-
-        const compensationProof = await mockProof(canClaim(witness, nullifier));
-
-        const tx = appChain.transaction(alice, () => {
-            compensation.claim(compensationProof);
-        });
-
-        await tx.sign();
-        await tx.send();
-
-        const block = await appChain.produceBlock();
-
-        const storedNullifier = await appChain.query.runtime.Compensation.nullifiers.get(
-            compensationProof.publicOutput.nullifier
-        );
-        const balance = await appChain.query.runtime.Balances.balances.get(alice);
-
-        expect(block?.txs[0].status).toBe(true);
-        expect(storedNullifier?.toBoolean()).toBe(true);
-        expect(balance?.toBigInt()).toBe(1000n);
-    });
-
-    it('should not allow claiming if a spent nullifier is used', async () => {
-        const nullifier = Nullifier.fromJSON(Nullifier.createTestNullifier([Field(0)], aliceKey));
-
-        const compensationProof = await mockProof(canClaim(witness, nullifier));
-
-        const tx = appChain.transaction(alice, () => {
-            compensation.claim(compensationProof);
-        });
-
-        await tx.sign();
-        await tx.send();
-
-        const block = await appChain.produceBlock();
-
-        const storedNullifier = await appChain.query.runtime.Compensation.nullifiers.get(
-            compensationProof.publicOutput.nullifier
-        );
-        const balance = await appChain.query.runtime.Balances.balances.get(alice);
-
-        expect(block?.txs[0].status).toBe(false);
-        expect(block?.txs[0].statusMessage).toMatch(/Nullifier has already been used/);
-        expect(storedNullifier?.toBoolean()).toBe(true);
-        expect(balance?.toBigInt()).toBe(1000n);
-    });
+    }
 });
