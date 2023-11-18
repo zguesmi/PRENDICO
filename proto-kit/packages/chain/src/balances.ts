@@ -12,7 +12,7 @@ export class Balances extends RuntimeModule<BalancesConfig> {
     @state() public circulatingSupply = State.from<UInt64>(UInt64);
 
     @runtimeMethod()
-    public addBalance(address: PublicKey, amount: UInt64): void {
+    public deposit(address: PublicKey, amount: UInt64): void {
         const circulatingSupply = this.circulatingSupply.get();
         const newCirculatingSupply = circulatingSupply.value.add(amount);
         assert(
