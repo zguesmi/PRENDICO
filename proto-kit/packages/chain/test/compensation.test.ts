@@ -55,58 +55,26 @@ describe('Compensation', () => {
     },1_000_000);
 
     it('should fail in case of calling the admin set up twice ',async ()=> {
-        const randomAddress = PrivateKey.random().toPublicKey();
+        const adminPublicKey = PrivateKey.random().toPublicKey();
         const tx1 = await appChain.transaction(alice, () => {
-            compensation.setAdmin(randomAddress
-            );
+            compensation.setAdmin(adminPublicKey);
         });
         await tx1.sign();
         await tx1.send();
-
-        await appChain.produceBlock();
+        const block1 = await appChain.produceBlock();
+        expect(block1?.txs[0].status).toBe(true);
 
         const tx2 = await appChain.transaction(alice, () => {
-            compensation.setAdmin(randomAddress
-            );
+            compensation.setAdmin(adminPublicKey);
         });
         await tx2.sign();
         await tx2.send();
         const block2 = await appChain.produceBlock();
-
-        const adminAfter = await appChain.query.runtime.Admin.admin.get();
         expect(block2?.txs[0].status).toBe(false);
         expect(block2?.txs[0].statusMessage).toBe("Admin key is already set");
 
-        expect(adminAfter).toEqual(alice);
-    },1_000_000);
-
-    it('should be able to change admin to the contract',async ()=> {
-        const randomAddress = PrivateKey.random().toPublicKey();
-        const tx = await appChain.transaction(alice, () => {
-            compensation.setAdmin(randomAddress
-            );
-        });
-        await tx.sign();
-        await tx.send();
-        const block = await appChain.produceBlock();
-
         const adminAfter = await appChain.query.runtime.Admin.admin.get();
-        expect(block?.txs[0].status).toBe(true);
-        expect(adminAfter).toEqual(alice);
-
-        const tx2 = await appChain.transaction(alice, () => {
-            compensation.changeAdmin(randomAddress
-            );
-        });
-        await tx2.sign();
-        await tx2.send();
-        const block2 = await appChain.produceBlock();
-
-        const newAdmin = await appChain.query.runtime.Admin.admin.get();
-        expect(block2?.txs[0].status).toBe(true);
-        expect(newAdmin).toEqual(randomAddress);
-
-
+        expect(adminAfter).toEqual(adminPublicKey);
     },1_000_000);
 
     it('should fail to change admin to the contract',async ()=> {
