@@ -10,9 +10,14 @@ import { useState } from "react";
 type FormProps = {
   onNextStep: () => void;
   userId: number;
+  setPhoneApi: (value: string) => void;
 };
 
-export default function FormOne({ onNextStep, userId }: FormProps) {
+export default function FormOne({
+  onNextStep,
+  userId,
+  setPhoneApi,
+}: FormProps) {
   const [identityNumber, setIdentityNumber] = useState("");
   const [verificationCode, setVerificationCode] = useState("");
   const [haveVerificationCode, setHaveVerificationCode] = useState(false);
@@ -29,7 +34,7 @@ export default function FormOne({ onNextStep, userId }: FormProps) {
     // Update the regular expression for phone number validation
     const isValidPhoneNumber =
       /^(\+\d{1,2}\s?)?(\(\d{1,4}\)|\d{1,4})\s?\d{1,15}$/.test(
-        identityNumber.trim()
+        identityNumber.trim(),
       );
     if (!isValidPhoneNumber) {
       setPhoneNumberError("Invalid phone number");
@@ -68,6 +73,7 @@ export default function FormOne({ onNextStep, userId }: FormProps) {
 
       const secondData = await secondResponse.json();
       console.log("Second Response:", secondData);
+      setPhoneApi(secondData);
 
       onNextStep(); // Move to the next step after calling the second endpoint
     } catch (error) {

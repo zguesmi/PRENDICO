@@ -13,6 +13,8 @@ import FormThree from "./forms/formThree";
 
 export default function MultiStepForm() {
   const [step, setStep] = useState(2);
+  const [phoneApi, setPhoneApi] = useState("");
+  const [geolocationApi, setGeolocationApi] = useState("");
   const userId = useMemo(
     () => Math.floor(Math.random() * 1_000_000_000) + 1,
     [],
@@ -26,11 +28,30 @@ export default function MultiStepForm() {
   const renderForm = () => {
     switch (step) {
       case 0:
-        return <FormOne onNextStep={handleNextStep} userId={userId} />;
+        return (
+          <FormOne
+            onNextStep={handleNextStep}
+            userId={userId}
+            setPhoneApi={setPhoneApi}
+          />
+        );
       case 1:
-        return <FormTwo onNextStep={handleNextStep} userId={userId} />;
+        return (
+          <FormTwo
+            onNextStep={handleNextStep}
+            userId={userId}
+            setGeolocationApi={setGeolocationApi}
+          />
+        );
       case 2:
-        return <FormThree onNextStep={handleNextStep} userId={userId} />;
+        return (
+          <FormThree
+            onNextStep={handleNextStep}
+            userId={userId}
+            phoneApi={phoneApi}
+            geolocationApi={geolocationApi}
+          />
+        );
       case 3:
         return <Success />;
       default:

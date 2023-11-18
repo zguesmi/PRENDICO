@@ -4,9 +4,14 @@ import { useState } from "react";
 type FormProps = {
   onNextStep: () => void;
   userId: number;
+  setGeolocationApi: (value: string) => void;
 };
 
-export default function FormTwo({ onNextStep, userId }: FormProps) {
+export default function FormTwo({
+  onNextStep,
+  userId,
+  setGeolocationApi,
+}: FormProps) {
   const [loading, setLoading] = useState(false);
 
   const handleNext = async () => {
@@ -23,6 +28,7 @@ export default function FormTwo({ onNextStep, userId }: FormProps) {
 
       const data = await response.json();
       console.log(data);
+      setGeolocationApi(data);
       onNextStep();
     } catch (error) {
       console.error("Error calling API:", error);

@@ -1,33 +1,52 @@
 import { Button } from "@mui/material";
-import { Client, useClientStore } from "../../lib/stores/client";
-import { PendingTransaction, UnsignedTransaction } from "@proto-kit/sequencer";
-import { PublicKey } from "o1js";
+import { useClientStore } from "../../lib/stores/client";
+import { Field, PublicKey, Signature } from "o1js";
 import { useWalletStore } from "../../lib/stores/wallet";
+import {
+  CompensationProof,
+  CompensationPublicOutput,
+  canClaim,
+} from "chain/dist/src/Compensation";
+// import { Pickles } from "o1js/dist/node/snarky";
+// import { dummyBase64Proof } from "o1js/dist/node/lib/proof_system";
 
 type FormProps = {
   onNextStep: () => void;
   userId: number;
-  wallet: string;
+  phoneApi: string;
+  geolocationApi: string;
 };
 
-function isPendingTransaction(
-  transaction: PendingTransaction | UnsignedTransaction | undefined,
-): asserts transaction is PendingTransaction {
-  if (!(transaction instanceof PendingTransaction))
-    throw new Error("Transaction is not a PendingTransaction");
-}
+// async function mockProof(
+//   publicOutput: CompensationPublicOutput,
+// ): Promise<CompensationProof> {
+//   const [, proof] = Pickles.proofOfBase64(await dummyBase64Proof(), 2);
+//   return new CompensationProof({
+//     proof: proof,
+//     maxProofsVerified: 2,
+//     publicInput: undefined,
+//     publicOutput,
+//   });
+// }
 
-export default function FormThree({ onNextStep, userId }: FormProps) {
+export default function FormThree({
+  onNextStep,
+  userId,
+  phoneApi,
+  geolocationApi,
+}: FormProps) {
   const client = useClientStore();
   const wallet = useWalletStore();
 
-  const handleNext = async () => {
-    if (!client.client || !wallet.wallet) return;
+  console.log(phoneApi);
+  console.log(geolocationApi);
 
+  const setupPublicKeys = async () => {
+    if (!client.client || !wallet.wallet) return;
     const compensation = client.client.runtime.resolve("Compensation");
-    console.log("wallet", wallet);
     const sender = PublicKey.fromBase58(wallet.wallet);
-    console.log("sender", sender);
+
+    //TODO: Set up public key with external script
     const tx = await client.client.transaction(sender, () => {
       compensation.setupPublicKeys(
         PublicKey.fromBase58(
@@ -38,15 +57,74 @@ export default function FormThree({ onNextStep, userId }: FormProps) {
         ),
       );
     });
-
     await tx.sign();
     await tx.send();
+  };
 
-    // isPendingTransaction(tx.transaction);
-    // wallet.addPendingTransaction(tx.transaction);
+  const claimCompensation = async () => {
+    if (!client.client || !wallet.wallet) return;
 
-    // //move to the next step
-    // // onNextStep();
+    const disasterOracleResponse = {
+      disasterId: Field(0),
+      userSessionId: Field(0),
+      amount: Field(0),
+      disasterOracleSignatureSalt: Field(0),
+      disasterOracleSignature: Signature.fromBase58("b6"),
+    };
+
+    const phoneNumberOracleResponse = {
+      phoneNumber: Field(0),
+      userSessionId: Field(0),
+      phoneOracleSignatureSalt: Field(0),
+      phoneOracleSignature: Signature.fromBase58("b765"),
+    };
+
+    const compensation = client.client.runtime.resolve("Compensation");
+    const phoneOraclePublicKey = compensation.phoneOraclePublicKey.get().value;
+    const disasterOraclePublicKey =
+      compensation.disasterOraclePublicKey.get().value;
+
+    // const compensationProof = await mockProof(
+    //   canClaim(
+    //     // keys
+    //     disasterOraclePublicKey,
+    //     phoneOraclePublicKey,
+    //     // disaster
+    //     disasterOracleResponse.disasterId,
+    //     disasterOracleResponse.userSessionId,
+    //     disasterOracleResponse.amount,
+    //     disasterOracleResponse.disasterOracleSignatureSalt,
+    //     disasterOracleResponse.disasterOracleSignature,
+    //     // phone number
+    //     phoneNumberOracleResponse.phoneNumber,
+    //     phoneNumberOracleResponse.phoneOracleSignatureSalt,
+    //     phoneNumberOracleResponse.phoneOracleSignature,
+    //     // victim's pubkey
+    //     wallet.wallet,
+    //     // nullifier,
+    //   ),
+    // );
+
+    // const sender = PublicKey.fromBase58(wallet.wallet);
+    // const tx = await client.client.transaction(sender, () => {
+    //   compensation.claim(compensationProof);
+    // });
+    // await tx.sign();
+    // await tx.send();
+  };
+
+  const handleNext = async () => {
+    if (!client.client || !wallet.wallet) return;
+    const compensation = client.client.runtime.resolve("Compensation");
+    const sender = PublicKey.fromBase58(wallet.wallet);
+
+    // set up Publics Key
+    await setupPublicKeys();
+    //claim compensation
+    await claimCompensation();
+
+    // move to the next step
+    onNextStep();
     console.log("success");
   };
 
