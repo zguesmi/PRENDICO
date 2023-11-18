@@ -25,14 +25,12 @@ export class Balances extends RuntimeModule<BalancesConfig> {
         this.balances.set(address, newBalance);
     }
 
-    @runtimeMethod()
-    public sendTokens(from: PublicKey, to: PublicKey, amount: UInt64) {
+    public sendTokens(from: PublicKey, to: PublicKey, amount: UInt64): void {
         amount.assertGreaterThan(UInt64.zero, 'Invalid amount');
-        from.isEmpty().assertFalse('Invalid from address');
-        to.isEmpty().assertFalse('Invalid to address');
         const fromBalance = this.balances.get(from).value;
+        fromBalance.assertGreaterThan(UInt64.zero);
         const toBalance = this.balances.get(to).value;
-        Bool(amount <= fromBalance).assertTrue('Insufficient balance');
+        amount.assertLessThanOrEqual(fromBalance, 'Insufficient balance');
         this.balances.set(from, fromBalance.sub(amount));
         this.balances.set(to, toBalance.add(amount));
     }

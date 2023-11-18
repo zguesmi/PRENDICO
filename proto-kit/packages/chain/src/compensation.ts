@@ -139,22 +139,23 @@ export class Compensation extends RuntimeModule<CompensationConfig> {
     public claim(compensationProof: CompensationProof) {
         compensationProof.verify();
 
-        assert(
-            Bool(compensationProof.publicOutput.disasterOraclePublicKey == this.disasterOraclePublicKey.get().value),
-            'Unknown disasterOraclePublicKey from proof'
-        );
-        assert(
-            Bool(compensationProof.publicOutput.phoneOraclePublicKey == this.phoneOraclePublicKey.get().value),
-            'Unknown phoneOraclePublicKey from proof'
-        );
-        // TODO activate nullifier.
-        // const isNullifierUsed = this.nullifiers.get(compensationProof.publicOutput.nullifier);
-        // assert(isNullifierUsed.value.not(), 'Nullifier has already been used');
-        // this.nullifiers.set(compensationProof.publicOutput.nullifier, Bool(true));
+        console.log(this.disasterOraclePublicKey.get().value.toBase58());
+        console.log(compensationProof.publicOutput.disasterOraclePublicKey.toBase58());
 
-        const from: PublicKey = this.adminContract.admin.get().value;
-        const to: PublicKey = compensationProof.publicOutput.beneficiary;
-        const amount: UInt64 = UInt64.from(compensationProof.publicOutput.amount);
-        this.balancesContract.sendTokens(admin, to, amount);
+        Bool(this.disasterOraclePublicKey.get().value.equals(compensationProof.publicOutput.disasterOraclePublicKey))
+            .assertTrue('publicOutput: ' + compensationProof.publicOutput.disasterOraclePublicKey.toBase58());
+        // assert(
+        //     Bool(compensationProof.publicOutput.phoneOraclePublicKey == this.phoneOraclePublicKey.get().value),
+        //     'Unknown phoneOraclePublicKey from proof'
+        // );
+        // // TODO activate nullifier.
+        // // const isNullifierUsed = this.nullifiers.get(compensationProof.publicOutput.nullifier);
+        // // assert(isNullifierUsed.value.not(), 'Nullifier has already been used');
+        // // this.nullifiers.set(compensationProof.publicOutput.nullifier, Bool(true));
+
+        // const from: PublicKey = this.adminContract.admin.get().value;
+        // const to: PublicKey = compensationProof.publicOutput.beneficiary;
+        // const amount: UInt64 = UInt64.from(3);
+        // // this.balancesContract.sendTokens(from, to, amount);
     }
 }
