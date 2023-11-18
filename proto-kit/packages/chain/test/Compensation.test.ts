@@ -7,7 +7,7 @@ import { log } from '@proto-kit/common';
 import { Pickles } from 'o1js/dist/node/snarky';
 import { dummyBase64Proof } from 'o1js/dist/node/lib/proof_system';
 
-// log.setLevel('ERROR');
+log.setLevel('ERROR');
 
 // Public keys of trusted oracles.
 const DISASTER_ORACLE_PRIVATE_KEY = 'EKDzXrLyjHVJgsXH6sXx4CJ6cqZqEwst8Vhds9k4H1Fo6AzQBtvH';
@@ -54,11 +54,11 @@ describe('Compensation', () => {
         // Check tx status.
         expect(block?.txs[0].status).toBe(true);
         // Check that public keys match.
-        expect(disasterOraclePublicKey).toBe(expectedDisasterOraclePublicKey);
-        expect(phoneOraclePublicKey).toBe(expectedPhoneOraclePublicKey);
+        expect(disasterOraclePublicKey).toEqual(expectedDisasterOraclePublicKey);
+        expect(phoneOraclePublicKey).toEqual(expectedPhoneOraclePublicKey);
     }, 1_000_000);
 
-        // it('should allow claiming if a valid proof is provided', async () => {
+    // it('should allow claiming if a valid proof is provided', async () => {
     //     const nullifier = Nullifier.fromJSON(Nullifier.createTestNullifier(message, aliceKey));
 
     //     const compensationProof = await mockProof(canClaim(witness, nullifier));
