@@ -8,6 +8,7 @@ import {
     PublicKey,
     Signature,
     Struct,
+    UInt64,
 } from 'o1js';
 import { inject } from 'tsyringe';
 import { Balances } from './balances';
@@ -82,7 +83,7 @@ export const compensationZkProgram = Experimental.ZkProgram({
                 Field, // phoneNumber
                 Field, // phoneOracleSignatureSalt
                 Signature, // phoneOracleSignature
-                Nullifier,
+                Nullifier, // hash(disasterId, phoneNumber) ??
             ],
             method: canClaim,
         },
@@ -128,10 +129,11 @@ export class Compensation extends RuntimeModule<CompensationConfig> {
 
         this.nullifiers.set(compensationProof.publicOutput.nullifier, Bool(true));
 
-        //TODO: Transfer instead
-        // this.balances.mint(
-        //   this.transaction.sender,
-        //   UInt64.from(compensationProof.publicOutput.amount)
-        // );
+        // TODO use correct addresses.
+        const owner: PublicKey = PublicKey.empty();
+        // compensationProof.publicOutput.nullifier.getPublicKey();
+        const to: PublicKey = PublicKey.empty();
+        const amount: UInt64 = UInt64.from(compensationProof.publicOutput.amount);
+        this.balances.sendTokens(owner, to, amount);
     }
 }
