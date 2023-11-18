@@ -1,14 +1,15 @@
-<table>
+<table style="border-collapse: collapse; width: 100%;">
   <tr>
     <!-- First Image -->
-    <td>
+    <td style="border: none;">
+
       <img src="/images/UNICEF_logo.png" alt="UNICEF" style="width: 100%;">
     </td>
     <!-- Vertical Line -->
-    <td style="border-left: 2px solid black;">
+    <td style="border-left: 2px solid black; width: 2px;">
     </td>
     <!-- Second Image -->
-    <td>
+    <td style="border: none;">
       <img src="/images/mina-logo.png" alt="Mina logo" style="width: 100%;">
     </td>
   </tr>
