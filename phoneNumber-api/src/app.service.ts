@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { randomInt } from 'crypto';
 import Client from 'mina-signer';
+import twilio from 'twilio';
 
 const client = new Client({ network: 'testnet' });
-const phoneNumberToChallengeCode: [number, number][] = [];
 
 @Injectable()
 export class AppService {
@@ -11,13 +11,18 @@ export class AppService {
     return 'hello';
   }
 
-  async getVerificationCode(res: any, phoneNumber: number): Promise<any> {
+  async getVerificationCode(res: any, phoneNumber: string): Promise<any> {
     try {
-      //TODO: send SMS
+      const twilioClient = twilio(
+        process.env.TWILIO_ACCOUNT_SID,
+        process.env.TWILIO_AUTH_TOKEN,
+      );
+      //send SMS
+      const verification = await twilioClient.verify.v2
+        .services(process.env.TWILIO_VERIFY_SID)
+        .verifications.create({ to: '+' + phoneNumber, channel: 'sms' });
 
-      const challengeCode = randomInt(1_000_000);
-      phoneNumberToChallengeCode.push([phoneNumber, challengeCode]);
-      return res.status(200).json({ code: challengeCode });
+      return res.status(200).json({ status: verification.status });
     } catch (error) {
       console.error(error);
       throw new Error('Error fetching or parsing data');
@@ -26,27 +31,35 @@ export class AppService {
 
   async verifyCode(
     res: any,
-    phoneNumber: number,
-    verificationCode: number,
+    phoneNumber: string,
+    verificationCode: string,
     userSessionId: number,
   ): Promise<any> {
     try {
-      //find the code verification in the mapping
-      const matchingPhoneNumber = phoneNumberToChallengeCode.find(
-        ([_, code]) => code == Number(verificationCode),
-      )?.[0];
+      const twilioClient = twilio(
+        process.env.TWILIO_ACCOUNT_SID,
+        process.env.TWILIO_AUTH_TOKEN,
+      );
 
-      if (matchingPhoneNumber != phoneNumber) {
+      //check is the code is correct
+      const verify = await twilioClient.verify.v2
+        .services(process.env.TWILIO_VERIFY_SID)
+        .verificationChecks.create({
+          to: '+' + phoneNumber,
+          code: verificationCode,
+        });
+      console.log(verify.status);
+
+      if (verify.status === 'canceled') {
         // No matching phone number found, return a 404 error
-        return res.status(404).json({ error: 'Phone number not found' });
+        return res.status(404).json({ error: 'Invalid code number' });
       }
 
       const fieldsResponse = {
         userSessionId: userSessionId,
-        phoneNumber: matchingPhoneNumber,
+        phoneNumber: Number(phoneNumber),
         salt: randomInt(1_000_000),
       };
-
       const sign = this.signFields(fieldsResponse);
       const finalResponse = {
         ...fieldsResponse,
@@ -55,7 +68,8 @@ export class AppService {
       return res.status(200).json(finalResponse);
     } catch (error) {
       console.error(error);
-      throw new Error('Error fetching or parsing data');
+      //workaround
+      return res.status(404).json({ error: 'Invalid code number' });
     }
   }
 

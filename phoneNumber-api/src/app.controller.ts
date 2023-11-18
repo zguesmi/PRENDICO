@@ -1,4 +1,4 @@
-import { Controller, Get, Ip, Query, Res } from '@nestjs/common';
+import { Controller, Get, Query, Res } from '@nestjs/common';
 import { AppService } from './app.service';
 
 @Controller()
@@ -13,7 +13,7 @@ export class AppController {
   @Get('/verificationcode')
   getVerificationCode(
     @Res() response: Response,
-    @Query('phoneNumber') phoneNumber: number,
+    @Query('phoneNumber') phoneNumber: string,
   ): Promise<string> {
     return this.appService.getVerificationCode(response, phoneNumber);
   }
@@ -21,8 +21,8 @@ export class AppController {
   @Get('/verifycode')
   verifyCode(
     @Res() response: Response,
-    @Query('phoneNumber') phoneNumber: number,
-    @Query('verificationCode') verificationCode: number,
+    @Query('phoneNumber') phoneNumber: string,
+    @Query('verificationCode') verificationCode: string,
     @Query('userSessionId') userSessionId: number,
   ): Promise<string> {
     return this.appService.verifyCode(
