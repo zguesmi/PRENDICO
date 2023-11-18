@@ -12,7 +12,7 @@ import FormTwo from "./forms/formTwo";
 import FormThree from "./forms/formThree";
 
 export default function MultiStepForm() {
-  const [step, setStep] = useState(2);
+  const [step, setStep] = useState(0);
   const [phoneApi, setPhoneApi] = useState("");
   const [geolocationApi, setGeolocationApi] = useState("");
   const userId = useMemo(
