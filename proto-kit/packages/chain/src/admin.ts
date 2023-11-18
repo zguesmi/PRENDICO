@@ -6,11 +6,10 @@ import { PublicKey, Bool } from "o1js";
 export class Admin extends RuntimeModule<unknown> {
   @state() public admin = State.from<PublicKey>(PublicKey);
 
-  public setAdmin() {
-    const admin = this.admin.get().value;
-    const isEmpty = admin.isEmpty()
+  public setAdmin(adminPublicKey: PublicKey) {
+    const isEmpty = this.admin.get().value.isEmpty()
     assert(isEmpty,"Admin key is already set");
-    this.admin.set(this.transaction.sender);
+    this.admin.set(adminPublicKey);
   }
 
   public OnlyAdmin() {
