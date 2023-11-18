@@ -160,6 +160,33 @@ The Phone API, also built with NestJS, now integrates with Twilio for enhanced p
 - **`verifyCode`**: Validates the submitted verification code with Twilio. Upon successful validation, it prepares and signs a response containing user session data.
 - **`signFields`**: Generates a digital signature for the verification data, leveraging the Mina Signer client to ensure security and reliability.
 
+
+### Interaction Between Components
+//TODO
+```mermaid
+sequenceDiagram
+    participant User as User Mobile Phone Web App
+    participant P as Protokit App Chain
+    participant PA as Phone Number API
+    participant DA as Disaster API
+    participant M as Mina Blockchain
+    participant AW as Embedded Wallet (Auro Wallet)
+
+    User->>+P: Initiates Disaster Compensation Claim
+    P->>+DA: Requests Disaster Verification
+    DA->>-P: Returns Disaster Verification Proof
+    P->>+PA: Requests Phone Number Verification
+    PA->>-P: Returns Phone Number Verification Proof
+    P->>P: Aggregates Proofs
+    P->>+AW: Requests ZK Proof Generation
+    User->>-AW: Generates ZK Proof
+    AW->>+P: Submits ZK Proof
+    P->>+M: Verifies ZK Proof
+    M->>-P: Approves Fund Transfer
+    P->>User: Signals Fund Transfer
+    M->>User: Transfers Funds
+```
+
 ### Web/Mobile App
 //TODO
 
@@ -169,22 +196,4 @@ sequenceDiagram
     participant WebMobileApp
     User->>WebMobileApp: Interact with App
     WebMobileApp->>User: Display Content
-```
-
-### Interaction Between Components
-//TODO
-```mermaid
-sequenceDiagram
-    participant ProtokitAppChain
-    participant API1
-    participant API2
-    participant WebMobileApp
-
-    User->>ProtokitAppChain: User Interaction
-    ProtokitAppChain->>API1: Request Data
-    ProtokitAppChain->>API2: Request Data
-    API1->>ProtokitAppChain: Respond with Data
-    API2->>ProtokitAppChain: Respond with Data
-    ProtokitAppChain->>WebMobileApp: Provide Data
-    WebMobileApp->>User: Display Data
 ```
