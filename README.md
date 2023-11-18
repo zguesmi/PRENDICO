@@ -1,7 +1,19 @@
-<p align="center">
-    <img src="/images/UNICEF_logo.png" alt="UNICEF" width="100" width="50%"/>
-    <img src="/images/mina-logo.png" alt="Mina logo" width="auto" width="50%"/>
-</p>
+<table>
+  <tr>
+    <!-- First Image -->
+    <td>
+      <img src="/images/UNICEF_logo.png" alt="UNICEF" style="width: 100%;">
+    </td>
+    <!-- Vertical Line -->
+    <td style="border-left: 2px solid black;">
+    </td>
+    <!-- Second Image -->
+    <td>
+      <img src="/images/mina-logo.png" alt="Mina logo" style="width: 100%;">
+    </td>
+  </tr>
+</table>
+
 
 # Project Overview
 
