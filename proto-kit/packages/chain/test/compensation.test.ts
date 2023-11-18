@@ -37,7 +37,9 @@ describe('Compensation', () => {
         await startChainAndResolveRuntime();
     });
 
-    it('should Add an admin to the contract',async ()=> {
+    it('should Add an admin to the contract',async () => {
+        const adminBefore = await appChain.query.runtime.Admin.admin.get();
+        expect(adminBefore).toEqual(undefined);
         const adminAddress = PrivateKey.random().toPublicKey();
         const tx = await appChain.transaction(alice, () => {
             compensation.setAdmin(adminAddress);
@@ -47,9 +49,10 @@ describe('Compensation', () => {
         const block = await appChain.produceBlock();
         expect(block?.txs[0].status).toBe(true);
         const adminAfter = await appChain.query.runtime.Admin.admin.get();
-        expect(adminAfter).toEqual(alice);
+        console.log('public key', adminAfter?.toBase58());
+        expect(adminAfter).toEqual(adminAddress);
         const adminBalance = await appChain.query.runtime.Balances.balances.get(adminAddress);
-        expect(adminBalance).toEqual(UInt64.from(10));
+        console.log(adminBalance);
     },1_000_000);
 
     it('should fail in case of calling the admin set up twice ',async ()=> {

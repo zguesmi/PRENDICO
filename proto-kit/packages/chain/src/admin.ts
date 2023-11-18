@@ -7,8 +7,8 @@ export class Admin extends RuntimeModule<unknown> {
   @state() public admin = State.from<PublicKey>(PublicKey);
 
   public setAdmin(adminPublicKey: PublicKey) {
-    const isEmpty = this.admin.get().value.isEmpty()
-    assert(isEmpty,"Admin key is already set");
+    const oldAdmin = this.admin.get().orElse(PublicKey.empty());
+    assert(oldAdmin.isEmpty(), "Admin key is already set");
     this.admin.set(adminPublicKey);
   }
 

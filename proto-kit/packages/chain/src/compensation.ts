@@ -114,9 +114,18 @@ export class Compensation extends RuntimeModule<CompensationConfig> {
 
     @runtimeMethod()
     // add random input to prevent error
-    public setAdmin(rndAddrr : PublicKey) {
-        this.adminContract.setAdmin();
-        this.balancesContract.balances.set(this.adminContract.admin.get().value, UInt64.from(10));
+    public setAdmin(adminPublicKey : PublicKey) {
+        this.adminContract.setAdmin(adminPublicKey);
+        this.balancesContract.addBalance(this.adminContract.admin.get().value, UInt64.from(10));
+        // this.balances.set(this.adminContract.admin.get().value, UInt64.from(10));
+        // assert(
+        //     this.balances.get(adminPublicKey).value.equals(UInt64.zero),
+        //     'Admin balance already setup'
+        // );
+        // const currentBalance = this.balances.get(this.transaction.sender);
+        // const newBalance = currentBalance.value.add(UInt64.from(10));
+        // this.balances.set(this.transaction.sender, newBalance);
+
     }
 
     @runtimeMethod()
