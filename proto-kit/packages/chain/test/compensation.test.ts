@@ -3,7 +3,7 @@ import { TestingAppChain } from '@proto-kit/sdk';
 import { Field, PrivateKey, PublicKey, Signature, UInt64 } from 'o1js';
 import { Balances } from '../src/balances';
 import { Admin } from '../src/admin';
-import { Compensation, CompensationProof, CompensationPublicOutput, canClaim } from '../src/compensation';
+import { ADMIN_INITIAL_BALANCE, Compensation, CompensationProof, CompensationPublicOutput, canClaim } from '../src/compensation';
 import { log } from '@proto-kit/common';
 import { Pickles } from 'o1js/dist/node/snarky';
 import { dummyBase64Proof } from 'o1js/dist/node/lib/proof_system';
@@ -15,8 +15,6 @@ const DISASTER_ORACLE_PUBLIC_KEY = 'B62qqLzJcD4R8uSuZXuAyhFRc6BqALqQ7g2LhV8Xe8Zp
 const PHONE_ORACLE_PRIVATE_KEY =
 'EKEWUJzR4RAH6VajUv5Ni9mGs3Sc7gf9Xrp5qctPJh4kZw362kak';
 const PHONE_ORACLE_PUBLIC_KEY = 'B62qnHWT9s9YiyzDBvEKKii4ocyjd5sujP9KCojK6BcCoHV6wujDBQo';
-
-const ADMIN_INITIAL_BALANCE = 10n;
 
 describe('Compensation', () => {
 

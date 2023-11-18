@@ -14,6 +14,8 @@ import { inject } from 'tsyringe';
 import { Balances } from './balances';
 import { Admin } from './admin';
 
+export const ADMIN_INITIAL_BALANCE = 10n;
+
 export class CompensationPublicOutput extends Struct({
     disasterOraclePublicKey: PublicKey,
     phoneOraclePublicKey: PublicKey,
@@ -116,22 +118,14 @@ export class Compensation extends RuntimeModule<CompensationConfig> {
     // add random input to prevent error
     public setAdmin(adminPublicKey : PublicKey) {
         this.adminContract.setAdmin(adminPublicKey);
-        this.balancesContract.addBalance(this.adminContract.admin.get().value, UInt64.from(10));
-        // this.balances.set(this.adminContract.admin.get().value, UInt64.from(10));
-        // assert(
-        //     this.balances.get(adminPublicKey).value.equals(UInt64.zero),
-        //     'Admin balance already setup'
-        // );
-        // const currentBalance = this.balances.get(this.transaction.sender);
-        // const newBalance = currentBalance.value.add(UInt64.from(10));
-        // this.balances.set(this.transaction.sender, newBalance);
-
+        this.balancesContract.addBalance(this.adminContract.admin.get().value, UInt64.from(ADMIN_INITIAL_BALANCE));
     }
 
     @runtimeMethod()
     // add random input to prevent error
     public changeAdmin(newAdmin : PublicKey) {
         this.adminContract.changeAdmin(newAdmin);
+        // TODO change balance of new admin.
     }
 
     @runtimeMethod()
