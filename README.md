@@ -36,7 +36,7 @@ Build for :
 <img src="/images/UNICEF_logo.png" alt="UNICEF" width="100" height="100"/>
 
 Powered by : 
-<img src="/images/mina-logo.png" alt="Mina logo" width="25%" height="auto"/>
+<img src="/images/mina-logo.png" alt="Mina logo" width="100" height="auto"/>
 <img src="/images/protokit.jpeg" alt="Protokit app chain" width="100" height="100"/>
 
 
