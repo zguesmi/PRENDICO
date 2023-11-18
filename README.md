@@ -2,10 +2,7 @@
   <tr>
     <!-- First Image -->
     <td style="border: none;">
-      <img src="/images/UNICEF_logo.png" alt="UNICEF" style="width: 100%;">
-    </td>
-    <td style="border: none;">
-      <img src="/images/mina-logo.png" alt="Mina logo" style="width: 100%;">
+      <img src="/images/PRENDICO.png" alt="PRENDICO" style="width: 100%;">
     </td>
   </tr>
 </table>
