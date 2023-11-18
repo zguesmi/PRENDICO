@@ -32,6 +32,13 @@ The culmination of this process occurs within a smart contract on the Mina Block
 Hacky Innovations:
 While maintaining the highest standards of security and privacy, we embraced innovative solutions. Notably, the use of Mina Blockchain's lightweight design allowed us to ensure efficient and scalable operations, enhancing the overall performance of the compensation process.
 
+Build for : 
+![UNICEF](/images/UNICEF_logo.png "UNICEF")
+
+Powered by : 
+![Mina](/images/mina-logo.png "Mina logo")
+![Protokit app chain](/images/protokit.jpeg "Protokit app chain")
+
 ---
 
 This structure maintains a comprehensive overview of your project, highlighting its key aspects, privacy commitment, technological integration, and innovative solutions.
