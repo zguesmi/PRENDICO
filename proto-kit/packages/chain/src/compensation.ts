@@ -19,7 +19,7 @@ export class CompensationPublicOutput extends Struct({
     phoneOraclePublicKey: PublicKey,
     amount: Field,
     beneficiary: PublicKey,
-    nullifier: Field, //TODO: Rename?
+    // nullifier: Field, //TODO: Rename?
 }) {}
 
 // TODO: Use unique message to prevent nullifier reuse
@@ -42,7 +42,7 @@ export function canClaim(
     phoneOracleSignature: Signature,
     // victim's pubkey
     beneficiary: PublicKey,
-    nullifier: Nullifier
+    // nullifier: Nullifier,
 ): CompensationPublicOutput {
     // Verify disaster oracle authorization.
     const isValidDisasterAuth = disasterOracleSignature.verify(disasterOraclePublicKey, [
@@ -61,14 +61,14 @@ export function canClaim(
     ]);
     isValidPhoneAuth.assertTrue('Invalid phone oracle authorization');
 
-    nullifier.verify(message);
+    // nullifier.verify(message);
 
     return new CompensationPublicOutput({
         disasterOraclePublicKey,
         phoneOraclePublicKey,
         amount,
         beneficiary,
-        nullifier: nullifier.key(),
+        // nullifier: nullifier.key(),
     });
 }
 
@@ -88,7 +88,7 @@ export const compensationZkProgram = Experimental.ZkProgram({
                 Field, // phoneOracleSignatureSalt
                 Signature, // phoneOracleSignature
                 PublicKey, // beneficiary
-                Nullifier, // hash(disasterId, phoneNumber) ??
+                // Nullifier, // hash(disasterId, phoneNumber) ??
             ],
             method: canClaim,
         },
@@ -143,12 +143,10 @@ export class Compensation extends RuntimeModule<CompensationConfig> {
             Bool(compensationProof.publicOutput.phoneOraclePublicKey == this.phoneOraclePublicKey.get().value),
             'Unknown phoneOraclePublicKey from proof'
         );
-
-        const isNullifierUsed = this.nullifiers.get(compensationProof.publicOutput.nullifier);
-
-        assert(isNullifierUsed.value.not(), 'Nullifier has already been used');
-
-        this.nullifiers.set(compensationProof.publicOutput.nullifier, Bool(true));
+        // TODO activate nullifier.
+        // const isNullifierUsed = this.nullifiers.get(compensationProof.publicOutput.nullifier);
+        // assert(isNullifierUsed.value.not(), 'Nullifier has already been used');
+        // this.nullifiers.set(compensationProof.publicOutput.nullifier, Bool(true));
 
         // TODO use correct addresses.
         const owner: PublicKey = this.adminContract.admin.get().value;
