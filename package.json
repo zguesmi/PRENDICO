@@ -1,4 +1,14 @@
 {
+  "name": "PRENDICO",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start:disaster-api": "cd disaster-api && npm run start",
+    "start:phoneNumber-api": "cd phoneNumber-api && npm run start",
+    "start:ui": "cd ui && npm run dev",
+    "start:chain": "cd proto-kit/packages/chain && pnpm run dev",
+    "demo": "npm run start:ui & npm run start:disaster-api & npm run start:phoneNumber-api & npm run start:ui"
+  },
   "dependencies": {
     "degit": "^2.8.4",
     "pnpm": "^8.10.5"
