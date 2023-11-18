@@ -109,16 +109,17 @@ classDiagram
 ```mermaid
 graph TD
     A[Start getDisaster] --> B[Fetch Disaster Data]
-    B --> G[Call getCountryCode]
-    G --> C[Parse XML to JSON]
+    B --> C[Parse XML to JSON]
     C -->|Error| Y[Handle Parse Error]
     C --> D[Check for Disaster]
-    D -->|Disaster Exists| E[Prepare Compensation Data]
-    D -->|No Disaster| F[Return No Disaster Error]
-    E --> H[Call signFields]
-    H -->|Error| W[Handle Signing Error]
-    H --> I[Return Signed Data]
-    G -->|Error| X[Handle Country Code Error]
+    D -->|Disaster Exists| F[Fetch Localization from IP]
+    D -->|No Disaster| G[Return No Disaster Error]
+    F -->|Error| X[Handle Country Code Error]
+    F --> E[Call getCountryCode]
+    E --> H[Prepare Compensation Data]
+    H --> I[Generate a Proof]
+    I -->|Error| W[Handle Proof Error]
+    I --> J[Return Proof data]
     B -->|Error| Z[Handle Fetch Error]
 
 ```
