@@ -88,34 +88,6 @@ graph TD
 
 ```
 
-### Web/Mobile App
-
-```mermaid
-sequenceDiagram
-    participant User
-    participant WebMobileApp
-    User->>WebMobileApp: Interact with App
-    WebMobileApp->>User: Display Content
-```
-
-### Interaction Between Components
-
-```mermaid
-sequenceDiagram
-    participant ProtokitAppChain
-    participant API1
-    participant API2
-    participant WebMobileApp
-
-    User->>ProtokitAppChain: User Interaction
-    ProtokitAppChain->>API1: Request Data
-    ProtokitAppChain->>API2: Request Data
-    API1->>ProtokitAppChain: Respond with Data
-    API2->>ProtokitAppChain: Respond with Data
-    ProtokitAppChain->>WebMobileApp: Provide Data
-    WebMobileApp->>User: Display Data
-```
-
 ## Disaster API Overview
 
 The Disaster API, built with NestJS, provides disaster-related responses and potential compensation based on the user's location. It fetches disaster data from external sources and uses cryptographic methods for secure responses.
@@ -144,3 +116,31 @@ The Phone API, created with NestJS, manages phone number verification and authen
 - **`getVerificationCode`**: Generates a verification code for a phone number.
 - **`verifyCode`**: Checks the verification code and returns a signed response upon successful validation.
 - **`signFields`**: Creates a digital signature using the user's session data and Mina Signer client.
+
+### Web/Mobile App
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant WebMobileApp
+    User->>WebMobileApp: Interact with App
+    WebMobileApp->>User: Display Content
+```
+
+### Interaction Between Components
+
+```mermaid
+sequenceDiagram
+    participant ProtokitAppChain
+    participant API1
+    participant API2
+    participant WebMobileApp
+
+    User->>ProtokitAppChain: User Interaction
+    ProtokitAppChain->>API1: Request Data
+    ProtokitAppChain->>API2: Request Data
+    API1->>ProtokitAppChain: Respond with Data
+    API2->>ProtokitAppChain: Respond with Data
+    ProtokitAppChain->>WebMobileApp: Provide Data
+    WebMobileApp->>User: Display Data
+```
