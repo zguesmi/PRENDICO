@@ -10,7 +10,7 @@ const WarningBox = ({ message }: { message: string }) => {
         maxWidth: 350,
         margin: "auto",
         marginTop: 2,
-        backgroundColor: "rgba(255, 204, 203, 0.4)",
+        backgroundColor: "rgba(255, 204, 203, 0.35)",
         display: "flex",
         alignItems: "center",
       }}
