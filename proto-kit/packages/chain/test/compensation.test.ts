@@ -162,23 +162,21 @@ describe('Compensation', () => {
         expect(phoneOraclePublicKey).toEqual(expectedPhoneOraclePublicKey);
     }, 1_000_000);
 
-    // it('should not setup oracles public keys if no admin setup', async () => {
-    //     const expectedDisasterOraclePublicKey: PublicKey = PublicKey.fromBase58(DISASTER_ORACLE_PUBLIC_KEY)
-    //     const expectedPhoneOraclePublicKey: PublicKey = PublicKey.fromBase58(PHONE_ORACLE_PUBLIC_KEY)
-    //     // Send setup tx.
-    //     const tx = await appChain.transaction(alice, () => {
-    //         compensation.setupPublicKeys(
-    //             expectedDisasterOraclePublicKey,
-    //             expectedPhoneOraclePublicKey,
-    //         );
-    //     });
-    //     await tx.sign();
-    //     await tx.send();
-    //     const block = await appChain.produceBlock();
-    //     // Check tx status.
-    //     expect(block?.txs[0].status).toBe(false);
-    //     expect(block?.txs[0].statusMessage).toBe("No admin key set !");
-    // }, 1_000_000);
+    it('should not setup oracles public keys if no admin setup', async () => {
+        // Send setup tx.
+        const tx = await appChain.transaction(alice, () => {
+            compensation.setupPublicKeys(
+                PublicKey.fromBase58(DISASTER_ORACLE_PUBLIC_KEY),
+                PublicKey.fromBase58(PHONE_ORACLE_PUBLIC_KEY),
+            );
+        });
+        await tx.sign();
+        await tx.send();
+        const block = await appChain.produceBlock();
+        // Check tx status.
+        expect(block?.txs[0].status).toBe(false);
+        expect(block?.txs[0].statusMessage).toBe("No admin key set !");
+    }, 1_000_000);
 
     // it('should allow claiming if a valid proof is provided', async () => {
     //     // Setup admin.
