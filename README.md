@@ -1,3 +1,8 @@
+<p align="center">
+    <img src="/images/UNICEF_logo.png" alt="UNICEF" width="100" width="50%"/>
+    <img src="/images/mina-logo.png" alt="Mina logo" width="auto" width="50%"/>
+</p>
+
 # Project Overview
 
 This document provides an overview of the project architecture and components.
@@ -34,6 +39,7 @@ While maintaining the highest standards of security and privacy, we embraced inn
 
 Build for : 
 <img src="/images/UNICEF_logo.png" alt="UNICEF" width="100" height="100"/>
+
 
 Powered by : 
 <img src="/images/mina-logo.png" alt="Mina logo" width="auto" height="100"/>
