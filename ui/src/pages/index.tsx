@@ -84,7 +84,7 @@ export default function Home() {
   return (
     <ThemeProvider theme={theme}>
       <Head>
-        <title>UNICEF</title>
+        <title>PRENDICO</title>
         <meta name="description" content="built with o1js" />
         <link rel="icon" href="/assets/unicef.png" />
       </Head>
@@ -131,7 +131,15 @@ export default function Home() {
             />
             <div>
               {(account === null || account === "") && (
-                <Button color="inherit" onClick={connectWallet}>
+                <Button
+                  color="inherit"
+                  sx={{
+                    border: "1px solid #000",
+                    marginRight: 3,
+                    py: 0.4,
+                  }}
+                  onClick={connectWallet}
+                >
                   Login
                 </Button>
               )}
@@ -140,7 +148,12 @@ export default function Home() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <Button color="inherit">Sign up</Button>
+                <Button
+                  color="inherit"
+                  sx={{ border: "1px solid #000", py: 0.4 }}
+                >
+                  Sign up
+                </Button>
               </a>
             </div>
           </Toolbar>

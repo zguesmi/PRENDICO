@@ -12,7 +12,7 @@ import FormTwo from "./forms/formTwo";
 import FormThree from "./forms/formThree";
 
 export default function MultiStepForm() {
-  const [step, setStep] = useState(0);
+  const [step, setStep] = useState(3);
   const userId = useMemo(
     () => Math.floor(Math.random() * 1_000_000_000) + 1,
     []
@@ -78,8 +78,7 @@ export default function MultiStepForm() {
 const Success = () => (
   <div>
     <Typography variant="h6" gutterBottom>
-      Success
+      You successfully receive your compensation
     </Typography>
-    {/* Add your Success fields and logic here */}
   </div>
 );
