@@ -3,7 +3,7 @@ import { TestingAppChain } from '@proto-kit/sdk';
 import { PrivateKey, PublicKey, UInt64 } from 'o1js';
 import { Balances } from '../src/balances';
 import { Admin } from '../src/admin';
-import { Compensation, CompensationProof, CompensationPublicOutput } from '../src/compensation';
+import { Compensation, CompensationProof, CompensationPublicOutput, canClaim } from '../src/compensation';
 import { log } from '@proto-kit/common';
 import { Pickles } from 'o1js/dist/node/snarky';
 import { dummyBase64Proof } from 'o1js/dist/node/lib/proof_system';
@@ -189,29 +189,45 @@ describe('Compensation', () => {
         expect(block?.txs[0].statusMessage).toBe("No admin key set !");
     }, 1_000_000);
 
-    // it('should allow claiming if a valid proof is provided', async () => {
-    //     const nullifier = Nullifier.fromJSON(Nullifier.createTestNullifier(message, aliceKey));
+    it('should allow claiming if a valid proof is provided', async () => {
+        // const nullifier = Nullifier.fromJSON(Nullifier.createTestNullifier(message, aliceKey));
 
-    //     const compensationProof = await mockProof(canClaim(witness, nullifier));
+        const compensationProof = await mockProof(canClaim(
+            disasterOraclePublicKey,
+            phoneOraclePublicKey,
+            // disaster
+            disasterId,
+            userSessionId,
+            amount,
+            disasterOracleSignatureSalt,
+            disasterOracleSignature,
+            // phone number
+            phoneNumber,
+            phoneOracleSignatureSalt,
+            phoneOracleSignature,
+            // victim's pubkey
+            beneficiary,
+            nullifier,
+        ));
 
-    //     const tx = appChain.transaction(alice, () => {
-    //         compensation.claim(compensationProof);
-    //     });
+        const tx = appChain.transaction(alice, () => {
+            compensation.claim(compensationProof);
+        });
 
-    //     await tx.sign();
-    //     await tx.send();
+        await tx.sign();
+        await tx.send();
 
-    //     const block = await appChain.produceBlock();
+        const block = await appChain.produceBlock();
 
-    //     const storedNullifier = await appChain.query.runtime.Compensation.nullifiers.get(
-    //         compensationProof.publicOutput.nullifier
-    //     );
-    //     const balance = await appChain.query.runtime.Balances.balances.get(alice);
+        const storedNullifier = await appChain.query.runtime.Compensation.nullifiers.get(
+            compensationProof.publicOutput.nullifier
+        );
+        const balance = await appChain.query.runtime.Balances.balances.get(alice);
 
-    //     expect(block?.txs[0].status).toBe(true);
-    //     expect(storedNullifier?.toBoolean()).toBe(true);
-    //     expect(balance?.toBigInt()).toBe(1000n);
-    // });
+        expect(block?.txs[0].status).toBe(true);
+        expect(storedNullifier?.toBoolean()).toBe(true);
+        expect(balance?.toBigInt()).toBe(1000n);
+    });
 
     // it('should not allow claiming if a spent nullifier is used', async () => {
     //     const nullifier = Nullifier.fromJSON(Nullifier.createTestNullifier([Field(0)], aliceKey));
