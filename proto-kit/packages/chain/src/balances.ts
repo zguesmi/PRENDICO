@@ -15,7 +15,7 @@ interface BalancesConfig {
 export class Balances extends RuntimeModule<BalancesConfig> {
   @state() public balances = StateMap.from<PublicKey, UInt64>(
     PublicKey,
-    UInt64
+    UInt64,
   );
 
   @state() public circulatingSupply = State.from<UInt64>(UInt64);
@@ -26,7 +26,7 @@ export class Balances extends RuntimeModule<BalancesConfig> {
     const newCirculatingSupply = circulatingSupply.value.add(amount);
     assert(
       newCirculatingSupply.lessThanOrEqual(this.config.totalSupply),
-      "Circulating supply would be higher than total supply"
+      "Circulating supply would be higher than total supply",
     );
     this.circulatingSupply.set(newCirculatingSupply);
     const currentBalance = this.balances.get(address);
