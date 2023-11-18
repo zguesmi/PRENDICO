@@ -47,8 +47,7 @@ classDiagram
 
 ```mermaid
 graph TD
-    A[Start] -->|getHello| B[Return 'hello']
-    A -->|getDisaster| C[Fetch Disaster Data]
+    A[Start] -->|getDisaster| C[Fetch Disaster Data]
     C --> D[Parse XML to JSON]
     D --> E[Check for Disaster]
     E -->|Disaster Exists| F[Prepare Compensation Data]
