@@ -11,7 +11,7 @@
 </table>
 
 
-# Project Overview
+# PRENDICO: Privacy-Enabled Disaster Compensation
 
 This document provides an overview of the project architecture and components.
 
@@ -20,30 +20,33 @@ Here's how you can integrate the provided descriptions into your README:
 ---
 
 ## Short Description
-Our project provides a quick post-disaster financial assistance via cryptocurrency, ensuring end-to-end privacy with zero knowledge proof. By focusing on scalability, digital and financial inclusion, we are leveraging web3 technologies to comprehensively support those who have lost everything.
+Our project enables fast post-disaster financial assistance via cryptocurrency, ensuring end-to-end privacy with zero knowledge proof. By focusing on scalability, digital and financial inclusion, we are leveraging web3 technologies to support those who have lost everything.
 
 ## DescriptionGo
 ### PRENDICO: Privacy-Enabled Disaster Compensation
-PRENDICO spearheads innovative solutions in disaster relief. This groundbreaking project synergizes blockchain technology, privacy tools, and financial inclusion to deliver swift and secure compensation to individuals affected by natural disasters.
+PRENDICO is an acronym for "Privacy-enabled Disaster Compensation,". It is an innovative solution after disasters. This project synergizes blockchain technology, privacy tools, and financial inclusion to deliver compensation privately to individuals affected by natural disasters.
 
 Privacy Commitment:
-At the core of PRENDICO is an unwavering commitment to privacy. Leveraging advanced cryptographic techniques, notably zero-knowledge proof, we ensure the confidentiality of aid recipients' personal information. This privacy-centric approach shields individuals from potential vulnerabilities, guaranteeing the discreet delivery of financial assistance.A standout feature of PRENDICO is its ability to automatically trigger compensation transfers in the aftermath of adverse climate events—be it a hurricane, flood, or any other disaster. Our system acts promptly, ensuring aid reaches those in need precisely when they need it most. Powered by a decentralized blockchain infrastructure, PRENDICO utilizes smart contracts and the lightweight Mina blockchain for automated and transparent fund distribution. This guarantees the efficiency of compensation transfers and establishes a trustless, auditable system, enhancing accountability and transparency.
+At the core of PRENDICO is a commitment to privacy. Leveraging cryptographic techniques, notably zero-knowledge proof, we ensure the confidentiality of aid recipients' personal information. This privacy-centric approach shields individuals from potential vulnerabilities, guaranteeing the discreet delivery of financial assistance. One feature of PRENDICO is its ability to automatically trigger compensation transfers in case of important climate events: hurricane, flood, or any other disaster. Our system acts promptly, ensuring aid reaches those in need precisely when they need it most. Powered by a decentralized blockchain infrastructure, PRENDICO utilizes smart contracts and the lightweight Mina blockchain for automated and transparent fund distribution. This guarantees the efficiency of compensation transfers and establishes a trustless, auditable system, enhancing accountability and transparency.
 
-Prioritizing financial inclusion, PRENDICO extends support to unbanked or underbanked populations, ensuring everyone has access to the compensation they deserve. Our user-friendly interface, built on web3 technologies, promotes digital inclusion, making the compensation process accessible to individuals with varying levels of digital literacy. Anyone with a phone number and internet access can benefit from our services.PRENDICO goes beyond conventional financial aid, recognizing the multifaceted challenges faced by individuals affected by disasters. The project is designed to provide comprehensive support, offering access to resources, information, and community networks. Through these additional avenues, we empower individuals in rebuilding their lives after a disaster.
+Prioritizing financial inclusion, PRENDICO extends support to unbanked or underbanked populations, ensuring everyone has access to the compensation they deserve. Our user-friendly interface, built on web3 technologies, promotes digital inclusion, making the compensation process accessible to individuals with low levels of digital literacy. Anyone with a phone number and internet access can benefit from our services.
 
 PRENDICO aims not only to deliver compensation efficiently but also to redefine standards in disaster relief, providing a beacon of hope and support for those navigating the challenging journey of recovery.
 
+
 ## How It's Made
-The development of PRENDICO involved a meticulous process, integrating various technologies to create a seamless and secure experience for users seeking disaster compensation.The heart of user interaction lies in the ZKDapp, where individuals connect to initiate the compensation process. This decentralized application streamlines the user experience, making it accessible and user-friendly.
+As mentioned PRENDICO involves different technologies to create a seamless and secure experience for users seeking disaster compensation. The heart of user interaction lies in the ZK Dapp, where individuals connect to initiate the compensation process. 
 
-The project's user interface is built on NextJS, providing a responsive and intuitive platform for users to validate their eligibility for financial compensation. This framework enables dynamic user interactions, ensuring a smooth onboarding process.To receive funds securely, users are required to create an Auro Wallet, compatible with the Mina Blockchain. This integration facilitates the decentralized storage of funds, ensuring transparency and security in financial transactions.
-To establish the user's eligibility, a two-step identity verification process is implemented. The user creates an identity wallet, and a challenge is presented – entering a phone number, receiving a code, and confirming ownership by inputting the code in the UI. Our Identity API validates this step and generate a proof with its private Key, ensuring a secure and accurate verification process.
-The next crucial step involves proving the user's presence in a disaster zone. Utilizing the GDACS API, the system locates the user and verifies its eligibility. A cryptographic proof is also generated, signed with the API's private key, ensuring that the user is genuinely within a disaster zone. The lightweight Mina Blockchain, with its Zero-Knowledge proof capabilities, securely stores and verifies these proofs, maintaining the anonymity of the victim.
+Victims can access the service only using a smartphone. The main UI (built with NextJS) can be accessed from the browser of the device, hence low internet is not an issue.
+To claim compensation, a two-step identity verification process is implemented, which involves verifying a phone number through a 1st REST API, the Phone Number Verification API. This step makes it difficult for a bad actor to request claims multiple times. 
+The next step for a victim is to request eligibility for a disaster on a 2nd REST API, the Global Disaster Alert and Coordination System API (GDACS API). This service locates the user, verifies its eligibility to current disaster and specifies the amount of compensation, based on price life index and severity of the disaster.
+It is preferable to have 2 different APIs, to avoid a bad actor to be able to correlate full user identity if hacking one monolithic API.
+Each API has its own private key, and all responses are signed with it.
+To receive funds securely, users are required to create an Auro Wallet, compatible with the Mina Blockchain.
+The Mina blockchain is chosen for its privacy feature.
+The victim has to locally generate a ZK proof that both APIs replied successfully and that response signatures are properly signed with public keys whitelisted in Mina L2 runtime contract.
+The locally computed proof is then sent to the Mina runtime contract. If the proof is valid, and if public outputs of the proof (public keys, ..) match current states in the contract, the claim is nullified to avoid double spending, and the compensation is sent to the public address of the victim.
 
-The culmination of this process occurs within a smart contract on the Mina Blockchain. The system verifies both proofs using their public keys, ensuring the integrity of the information. If the aggregation of these details is accurate, the financial transfer is executed, providing compensation to the eligible individual.
-
-Hacky Innovations:
-While maintaining the highest standards of security and privacy, we embraced innovative solutions. Notably, the use of Mina Blockchain's lightweight design allowed us to ensure efficient and scalable operations, enhancing the overall performance of the compensation process.
 
 Build for : 
 <img src="/images/UNICEF_logo.png" alt="UNICEF" width="100" height="100"/>
