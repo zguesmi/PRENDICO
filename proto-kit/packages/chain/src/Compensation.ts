@@ -4,13 +4,10 @@ import {
     Bool,
     Experimental,
     Field,
-    MerkleMapWitness,
     Nullifier,
-    Poseidon,
     PublicKey,
     Signature,
     Struct,
-    UInt64,
 } from 'o1js';
 import { inject } from 'tsyringe';
 import { Balances } from './balances';
@@ -95,7 +92,7 @@ export const compensationZkProgram = Experimental.ZkProgram({
 
 export class CompensationProof extends Experimental.ZkProgram.Proof(compensationZkProgram) {}
 
-interface CompensationConfig {}
+type CompensationConfig = Record<string, never>;
 
 @runtimeModule()
 export class Compensation extends RuntimeModule<CompensationConfig> {

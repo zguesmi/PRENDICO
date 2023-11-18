@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { useEffect } from "react";
+import { useState } from "react";
 import GradientBG from "../components/GradientBG.js";
 import {
   AppBar,
@@ -7,6 +7,8 @@ import {
   Toolbar,
   createTheme,
   ThemeProvider,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import "../styles/Home.module.css";
 import Content from "./content";
@@ -24,33 +26,99 @@ const theme = createTheme({
 });
 
 export default function Home() {
-  useEffect(() => {
-    (async () => {
-      const { Mina, PublicKey } = await import("o1js");
-      const { Add } = await import("../../../contracts/build/src/");
+  const [account, setAccount] = useState("");
+  const [errorOpen, setErrorOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successOpen, setSuccessOpen] = useState(false);
 
-      // Update this to use the address (public key) for your zkApp account.
-      // To try it out, you can try this address for an example "Add" smart contract that we've deployed to
-      // Berkeley Testnet B62qkwohsqTBPsvhYE8cPZSpzJMgoKn4i1LQRuBAtVXWpaT4dgH6WoA.
-      const zkAppAddress = "";
-      // This should be removed once the zkAppAddress is updated.
-      if (!zkAppAddress) {
-        console.error(
-          'The following error is caused because the zkAppAddress has an empty string as the public key. Update the zkAppAddress with the public key for your zkApp account, or try this address for an example "Add" smart contract that we deployed to Berkeley Testnet: B62qkwohsqTBPsvhYE8cPZSpzJMgoKn4i1LQRuBAtVXWpaT4dgH6WoA'
-        );
+  const addInfo = {
+    url: encodeURIComponent("https://proxy.devnet.minaexplorer.com"),
+    name: "devnet",
+  };
+
+  const handleClose = (
+    event: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setErrorOpen(false);
+    setSuccessOpen(false);
+  };
+
+  const connectWallet = async () => {
+    try {
+      if (window.mina) {
+        console.log("Auro Wallet is installed!");
+
+        // Get Account
+        const accounts: string[] = await window.mina.requestAccounts();
+        setAccount(accounts[0]);
+        // Switch to Custom chain
+        await window.mina?.addChain(addInfo);
+
+        //auto detect chainChanged
+        window.mina.on("chainChanged", async () => {
+          console.log("chain changed");
+          await window.mina?.addChain(addInfo);
+        });
+        //auto detect accountsChanged
+        window.mina.on("accountsChanged", (updatedAccounts: string[]) => {
+          console.log(updatedAccounts);
+          setAccount(updatedAccounts[0]);
+          setSuccessOpen(true);
+        });
+        setSuccessOpen(true);
+      } else {
+        setErrorMessage("Auro Wallet is not installed");
+        setErrorOpen(true); // Show alert Snackbar
       }
-      //const zkApp = new Add(PublicKey.fromBase58(zkAppAddress))
-    })();
-  }, []);
+    } catch (error: any) {
+      console.error("Error connecting to wallet:", error);
+      setErrorMessage(`Error connecting to wallet: ${error.message}`);
+      setErrorOpen(true); // Show alert Snackbar
+    }
+  };
 
   return (
     <ThemeProvider theme={theme}>
       <Head>
-        <title>UNICEF</title>
+        <title>PRENDICO</title>
         <meta name="description" content="built with o1js" />
         <link rel="icon" href="/assets/unicef.png" />
       </Head>
       <GradientBG>
+        <Snackbar
+          open={errorOpen}
+          autoHideDuration={2_000}
+          onClose={handleClose}
+        >
+          <Alert
+            elevation={6}
+            variant="filled"
+            severity="error"
+            onClose={handleClose}
+            sx={{ width: "100%" }}
+          >
+            {errorMessage}
+          </Alert>
+        </Snackbar>
+        <Snackbar
+          open={successOpen}
+          autoHideDuration={2_000}
+          onClose={handleClose}
+        >
+          <Alert
+            elevation={6}
+            variant="filled"
+            severity="success"
+            onClose={handleClose}
+            sx={{ width: "100%" }}
+          >
+            Account connected successfully!
+          </Alert>
+        </Snackbar>
         <AppBar position="static">
           <Toolbar sx={{ justifyContent: "space-between" }}>
             <Image
@@ -62,8 +130,31 @@ export default function Home() {
               style={{ width: "11%", height: "auto" }}
             />
             <div>
-              <Button color="inherit">Login</Button>
-              <Button color="inherit">Sign up</Button>
+              {(account === null || account === "") && (
+                <Button
+                  color="inherit"
+                  sx={{
+                    border: "1px solid #000",
+                    marginRight: 3,
+                    py: 0.4,
+                  }}
+                  onClick={connectWallet}
+                >
+                  Login
+                </Button>
+              )}
+              <a
+                href="https://www.aurowallet.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Button
+                  color="inherit"
+                  sx={{ border: "1px solid #000", py: 0.4 }}
+                >
+                  Sign up
+                </Button>
+              </a>
             </div>
           </Toolbar>
         </AppBar>
