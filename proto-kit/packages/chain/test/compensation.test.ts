@@ -40,8 +40,7 @@ describe('Compensation', () => {
     it('should Add an admin to the contract',async ()=> {
         const adminAddress = PrivateKey.random().toPublicKey();
         const tx = await appChain.transaction(alice, () => {
-            compensation.setAdmin(adminAddress
-            );
+            compensation.setAdmin(adminAddress);
         });
         await tx.sign();
         await tx.send();
