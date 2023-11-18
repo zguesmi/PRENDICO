@@ -10,13 +10,13 @@ import { dummyBase64Proof } from 'o1js/dist/node/lib/proof_system';
 
 log.setLevel('ERROR');
 
-// Public keys of trusted oracles.
 const DISASTER_ORACLE_PRIVATE_KEY = 'EKDzXrLyjHVJgsXH6sXx4CJ6cqZqEwst8Vhds9k4H1Fo6AzQBtvH';
 const DISASTER_ORACLE_PUBLIC_KEY = 'B62qqLzJcD4R8uSuZXuAyhFRc6BqALqQ7g2LhV8Xe8ZpmDH1JrueqdB';
-
 const PHONE_ORACLE_PRIVATE_KEY =
 'EKEWUJzR4RAH6VajUv5Ni9mGs3Sc7gf9Xrp5qctPJh4kZw362kak';
 const PHONE_ORACLE_PUBLIC_KEY = 'B62qnHWT9s9YiyzDBvEKKii4ocyjd5sujP9KCojK6BcCoHV6wujDBQo';
+
+const ADMIN_INITIAL_BALANCE = 10n;
 
 describe('Compensation', () => {
 
@@ -51,7 +51,7 @@ describe('Compensation', () => {
         const adminAfter = await appChain.query.runtime.Admin.admin.get();
         expect(adminAfter).toEqual(adminAddress);
         const adminBalance = await appChain.query.runtime.Balances.balances.get(adminAddress);
-        expect(adminBalance?.toBigInt()).toBe(10n);
+        expect(adminBalance?.toBigInt()).toBe(ADMIN_INITIAL_BALANCE);
     },1_000_000);
 
     it('should fail in case of calling the admin set up twice ',async ()=> {
