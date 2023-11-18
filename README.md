@@ -33,12 +33,12 @@ Hacky Innovations:
 While maintaining the highest standards of security and privacy, we embraced innovative solutions. Notably, the use of Mina Blockchain's lightweight design allowed us to ensure efficient and scalable operations, enhancing the overall performance of the compensation process.
 
 Build for : 
-![UNICEF](/images/UNICEF_logo.png "UNICEF" =300x200)
-<img src="/images/UNICEF_logo.png" alt="UNICEF" width="200"/>
+<img src="/images/UNICEF_logo.png" alt="UNICEF" width="100" height="100"/>
 
 Powered by : 
-![Mina](/images/mina-logo.png "Mina logo")
-![Protokit app chain](/images/protokit.jpeg "Protokit app chain")
+<img src="/images/mina-logo.png" alt="Mina logo" width="100" height="100"/>
+<img src="/images/protokit.jpeg" alt="Protokit app chain" width="100" height="100"/>
+
 
 ---
 
