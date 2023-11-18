@@ -1,8 +1,8 @@
 import 'reflect-metadata';
 import { TestingAppChain } from '@proto-kit/sdk';
-import { Compensation, CompensationProof, CompensationPublicOutput, canClaim, message } from './Compensation';
+import { Compensation, CompensationProof, CompensationPublicOutput, canClaim, message } from '../src/Compensation';
 import { Field, PrivateKey, Nullifier, MerkleMap, Poseidon, Bool, UInt64, PublicKey } from 'o1js';
-import { Balances } from './balances';
+import { Balances } from '../src/balances';
 import { Pickles } from 'o1js/dist/node/snarky';
 import { dummyBase64Proof } from 'o1js/dist/node/lib/proof_system';
 
