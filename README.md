@@ -34,6 +34,7 @@ While maintaining the highest standards of security and privacy, we embraced inn
 
 Build for : 
 ![UNICEF](/images/UNICEF_logo.png "UNICEF")
+<img src="/images/UNICEF_logo.png" alt="UNICEF" width="200"/>
 
 Powered by : 
 ![Mina](/images/mina-logo.png "Mina logo")
