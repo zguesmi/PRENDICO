@@ -49,10 +49,9 @@ describe('Compensation', () => {
         const block = await appChain.produceBlock();
         expect(block?.txs[0].status).toBe(true);
         const adminAfter = await appChain.query.runtime.Admin.admin.get();
-        console.log('public key', adminAfter?.toBase58());
         expect(adminAfter).toEqual(adminAddress);
         const adminBalance = await appChain.query.runtime.Balances.balances.get(adminAddress);
-        console.log(adminBalance);
+        expect(adminBalance?.toBigInt()).toBe(10n);
     },1_000_000);
 
     it('should fail in case of calling the admin set up twice ',async ()=> {
