@@ -194,7 +194,8 @@ describe('Compensation', () => {
         });
         await setupKeysTx.sign();
         await setupKeysTx.send();
-        await appChain.produceBlock();
+        const setupKeysBlock = await appChain.produceBlock();
+        expect(setupKeysBlock?.txs[0].status).toBe(true);
         // Create claim proof.
         // const nullifier = Nullifier.fromJSON(Nullifier.createTestNullifier(message, aliceKey));
         const disasterOraclePublicKey = await appChain.query.runtime.Compensation.disasterOraclePublicKey.get();
