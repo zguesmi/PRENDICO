@@ -3,7 +3,7 @@ import { TestingAppChain } from '@proto-kit/sdk';
 import { PrivateKey, PublicKey, UInt64 } from 'o1js';
 import { Balances } from '../src/balances';
 import { Admin } from '../src/admin';
-import { Compensation, CompensationProof, CompensationPublicOutput } from '../src/Compensation';
+import { Compensation, CompensationProof, CompensationPublicOutput } from '../src/compensation';
 import { log } from '@proto-kit/common';
 import { Pickles } from 'o1js/dist/node/snarky';
 import { dummyBase64Proof } from 'o1js/dist/node/lib/proof_system';
