@@ -226,7 +226,6 @@ describe('Compensation', () => {
             phoneNumber,
             phoneOracleSignatureSalt,
         ]);
-        console.log("disasterOraclePublicKey?.toBase58", disasterOraclePublicKey?.toBase58());
         const compensationProof = await mockProof(canClaim(
             // keys
             disasterOraclePublicKey || PublicKey.empty(),
@@ -245,16 +244,12 @@ describe('Compensation', () => {
             beneficiary,
             // nullifier,
         ));
-        console.log("disasterOraclePublicKey?.toBase58", compensationProof.publicOutput.disasterOraclePublicKey.toBase58());
-        // Claim
         // Check balances before.
         const beneficiaryBalanceBefore = await appChain.query.runtime.Balances.balances.get(beneficiary);
         expect(beneficiaryBalanceBefore).toEqual(undefined);
         const adminBalance = await appChain.query.runtime.Balances.balances.get(adminPublicKey);
-        console.log(adminBalance?.toString());
         expect(adminBalance?.toBigInt()).toBe(ADMIN_INITIAL_BALANCE);
-
-
+        // Claim
         const claimTx = await appChain.transaction(alice, () => {
             compensation.claim(compensationProof);
         });
@@ -262,6 +257,7 @@ describe('Compensation', () => {
         await claimTx.send();
         const claimBlock = await appChain.produceBlock();
         expect(claimBlock?.txs[0].status).toBe(true);
+        
         // // Check balances after.
         // const beneficiaryBalanceAfter = await appChain.query.runtime.Balances.balances.get(beneficiary);
         // expect(beneficiaryBalanceAfter).toEqual(UInt64.from(3));
@@ -271,7 +267,7 @@ describe('Compensation', () => {
         // //     compensationProof.publicOutput.nullifier
         // // );
         // // expect(storedNullifier?.toBoolean()).toBe(true);
-    }, 10000000);
+    }, 1_000_000);
 
     // // it('should not allow claiming if a spent nullifier is used', async () => {
     // //     const nullifier = Nullifier.fromJSON(Nullifier.createTestNullifier([Field(0)], aliceKey));
