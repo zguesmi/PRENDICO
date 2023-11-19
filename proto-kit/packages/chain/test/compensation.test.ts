@@ -247,8 +247,8 @@ describe('Compensation', () => {
         // Check balances before.
         const beneficiaryBalanceBefore = await appChain.query.runtime.Balances.balances.get(beneficiary);
         expect(beneficiaryBalanceBefore).toEqual(undefined);
-        const adminBalance = await appChain.query.runtime.Balances.balances.get(adminPublicKey);
-        expect(adminBalance?.toBigInt()).toBe(ADMIN_INITIAL_BALANCE);
+        const adminBalanceBefore = await appChain.query.runtime.Balances.balances.get(adminPublicKey);
+        expect(adminBalanceBefore?.toBigInt()).toBe(ADMIN_INITIAL_BALANCE);
         // Claim
         const claimTx = await appChain.transaction(alice, () => {
             compensation.claim(compensationProof);
@@ -257,16 +257,17 @@ describe('Compensation', () => {
         await claimTx.send();
         const claimBlock = await appChain.produceBlock();
         expect(claimBlock?.txs[0].status).toBe(true);
-        
-        // // Check balances after.
-        // const beneficiaryBalanceAfter = await appChain.query.runtime.Balances.balances.get(beneficiary);
-        // expect(beneficiaryBalanceAfter).toEqual(UInt64.from(3));
-        // // const balance = await appChain.query.runtime.Balances.balances.get(alice);
-        // // expect(balance?.toBigInt()).toBe(1000n);
-        // // const storedNullifier = await appChain.query.runtime.Compensation.nullifiers.get(
-        // //     compensationProof.publicOutput.nullifier
-        // // );
-        // // expect(storedNullifier?.toBoolean()).toBe(true);
+        // Check balances after.
+        // Beneficiary
+        const beneficiaryBalanceAfter = await appChain.query.runtime.Balances.balances.get(beneficiary);        
+        expect(beneficiaryBalanceAfter?.toBigInt()).toEqual(amount.toBigInt());
+        // Admin
+        const adminBalanceAfter = await appChain.query.runtime.Balances.balances.get(adminPublicKey);
+        expect(adminBalanceAfter?.toBigInt()).toBe(BigInt(ADMIN_INITIAL_BALANCE) - amount.toBigInt());
+        // const storedNullifier = await appChain.query.runtime.Compensation.nullifiers.get(
+        //     compensationProof.publicOutput.nullifier
+        // );
+        // expect(storedNullifier?.toBoolean()).toBe(true);
     }, 1_000_000);
 
     // // it('should not allow claiming if a spent nullifier is used', async () => {

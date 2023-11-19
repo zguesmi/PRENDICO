@@ -150,7 +150,7 @@ export class Compensation extends RuntimeModule<CompensationConfig> {
             compensationProof.publicOutput.phoneOraclePublicKey.equals(this.phoneOraclePublicKey.get().value),
             'Unknown phoneOraclePublicKey from proof'
         );
-        
+
         // TODO activate nullifier.
         // const isNullifierUsed = this.nullifiers.get(compensationProof.publicOutput.nullifier);
         // assert(isNullifierUsed.value.not(), 'Nullifier has already been used');
@@ -158,7 +158,7 @@ export class Compensation extends RuntimeModule<CompensationConfig> {
 
         const from: PublicKey = this.adminContract.admin.get().value;
         const to: PublicKey = compensationProof.publicOutput.beneficiary;
-        const amount: UInt64 = UInt64.from(3);
+        const amount: UInt64 = UInt64.from(compensationProof.publicOutput.amount);
         this.balancesContract.sendTokens(from, to, amount);
     }
 }
