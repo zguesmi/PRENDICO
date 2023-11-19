@@ -30,7 +30,7 @@ describe('balances', () => {
         const balances = appChain.runtime.resolve('Balances');
 
         const tx1 = await appChain.transaction(alice, () => {
-            balances.addBalance(alice, UInt64.from(1000));
+            balances.deposit(alice, UInt64.from(1000));
         });
 
         await tx1.sign();
