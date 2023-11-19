@@ -10,6 +10,6 @@ async function bootstrap() {
     res.header('Access-Control-Allow-Headers', 'Content-Type');
     next();
   });
-  await app.listen(8080);
+  await app.listen(8082);
 }
 bootstrap();

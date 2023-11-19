@@ -121,7 +121,7 @@ export default function FormThree({
     // set up Publics Key
     await setupPublicKeys();
     //claim compensation
-    await claimCompensation();
+    // await claimCompensation();
 
     // move to the next step
     onNextStep();
