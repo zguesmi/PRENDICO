@@ -1,6 +1,6 @@
 import { UInt64 } from 'o1js';
 import { Balances } from './balances';
-import { Compensation } from './Compensation';
+import { Compensation } from './compensation';
 
 export default {
     modules: {
