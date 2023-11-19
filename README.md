@@ -115,9 +115,9 @@ graph TD
     F -->|Error| X[Handle Country Code Error]
     F --> E[Call getCountryCode]
     E --> H[Prepare Compensation Data]
-    H --> I[Generate a Proof]
-    I -->|Error| W[Handle Proof Error]
-    I --> J[Return Proof data]
+    H --> I[Call signFields]
+    I -->|Error| W[Handle Signed Error]
+    I --> J[Return Signed data]
     B -->|Error| Z[Handle Fetch Error]
 
 ```
@@ -135,9 +135,9 @@ graph TD
     G --> H[Check Code via Twilio]
     H -->|Code Valid| I[Prepare Fields for Signing]
     H -->|Code Invalid| J[Return Invalid Code Error]
-    I --> K[Generate a Proof]
-    K -->|Error| L[Handle Proof Error]
-    K --> M[Return Proof data]
+    I --> K[Call signFields]
+    K -->|Error| L[Handle Signed Error]
+    K --> M[Return Signed data]
     H -->|Error| N[Handle Verification Error]
 ```
 
