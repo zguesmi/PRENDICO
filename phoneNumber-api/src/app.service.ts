@@ -50,7 +50,7 @@ export class AppService {
         });
       console.log(verify.status);
 
-      if (verify.status === 'canceled') {
+      if (verify.status === 'canceled' || verify.status === 'pending') {
         // No matching phone number found, return a 404 error
         return res.status(404).json({ error: 'Invalid code number' });
       }
