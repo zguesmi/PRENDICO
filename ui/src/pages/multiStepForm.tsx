@@ -12,7 +12,7 @@ import FormTwo from "./forms/formTwo";
 import FormThree from "./forms/formThree";
 
 export default function MultiStepForm() {
-  const [step, setStep] = useState(3);
+  const [step, setStep] = useState(0);
   const userId = useMemo(
     () => Math.floor(Math.random() * 1_000_000_000) + 1,
     []
