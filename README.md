@@ -6,6 +6,14 @@
     </td>
   </tr>
 </table>
+<table style="border-collapse: collapse; width: 100%;">
+  <tr>
+    <!-- First Image -->
+    <td style="border: none;">
+      <img src="/images/gdacs.png" alt="GDACS" style="width: 100%;">
+    </td>
+  </tr>
+</table>
 
 This document provides an overview of the project architecture and components.
 
