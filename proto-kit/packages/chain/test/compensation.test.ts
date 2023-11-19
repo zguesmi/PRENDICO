@@ -270,30 +270,31 @@ describe('Compensation', () => {
         // expect(storedNullifier?.toBoolean()).toBe(true);
     }, 1_000_000);
 
-    // // it('should not allow claiming if a spent nullifier is used', async () => {
-    // //     const nullifier = Nullifier.fromJSON(Nullifier.createTestNullifier([Field(0)], aliceKey));
+    // TODO
+    // it('should not allow claiming if a spent nullifier is used', async () => {
+    //     const nullifier = Nullifier.fromJSON(Nullifier.createTestNullifier([Field(0)], aliceKey));
 
-    // //     const compensationProof = await mockProof(canClaim(witness, nullifier));
+    //     const compensationProof = await mockProof(canClaim(witness, nullifier));
 
-    // //     const tx = appChain.transaction(alice, () => {
-    // //         compensation.claim(compensationProof);
-    // //     });
+    //     const tx = appChain.transaction(alice, () => {
+    //         compensation.claim(compensationProof);
+    //     });
 
-    // //     await tx.sign();
-    // //     await tx.send();
+    //     await tx.sign();
+    //     await tx.send();
 
-    // //     const block = await appChain.produceBlock();
+    //     const block = await appChain.produceBlock();
 
-    // //     const storedNullifier = await appChain.query.runtime.Compensation.nullifiers.get(
-    // //         compensationProof.publicOutput.nullifier
-    // //     );
-    // //     const balance = await appChain.query.runtime.Balances.balances.get(alice);
+    //     const storedNullifier = await appChain.query.runtime.Compensation.nullifiers.get(
+    //         compensationProof.publicOutput.nullifier
+    //     );
+    //     const balance = await appChain.query.runtime.Balances.balances.get(alice);
 
-    // //     expect(block?.txs[0].status).toBe(false);
-    // //     expect(block?.txs[0].statusMessage).toMatch(/Nullifier has already been used/);
-    // //     expect(storedNullifier?.toBoolean()).toBe(true);
-    // //     expect(balance?.toBigInt()).toBe(1000n);
-    // // });
+    //     expect(block?.txs[0].status).toBe(false);
+    //     expect(block?.txs[0].statusMessage).toMatch(/Nullifier has already been used/);
+    //     expect(storedNullifier?.toBoolean()).toBe(true);
+    //     expect(balance?.toBigInt()).toBe(1000n);
+    // });
 
     async function startChainAndResolveRuntime() {
         appChain = TestingAppChain.fromRuntime({
