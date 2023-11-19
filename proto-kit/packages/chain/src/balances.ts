@@ -26,12 +26,37 @@ export class Balances extends RuntimeModule<BalancesConfig> {
     }
 
     public sendTokens(from: PublicKey, to: PublicKey, amount: UInt64): void {
-        amount.assertGreaterThan(UInt64.zero, 'Invalid amount');
+        assert(amount.greaterThan(UInt64.zero), 'Invalid amount')
         const fromBalance = this.balances.get(from).value;
-        fromBalance.assertGreaterThan(UInt64.zero);
+        assert(fromBalance.greaterThan(UInt64.zero), 'Invalid from balance');
         const toBalance = this.balances.get(to).value;
-        amount.assertLessThanOrEqual(fromBalance, 'Insufficient balance');
-        this.balances.set(from, fromBalance.sub(amount));
-        this.balances.set(to, toBalance.add(amount));
+        assert(amount.lessThanOrEqual(fromBalance), 'Insufficient balance');
+        this.balances.set(from, safeSub(fromBalance, amount));
+        this.balances.set(to, safeAdd(toBalance, amount));
     }
+}
+
+const errors = {
+    underflow: "Cannot subtract, the result would underflow",
+    overflow: "Cannot add, the result would overflow",
+};
+
+function safeSub(
+    a: UInt64,
+    b: UInt64,
+    error: string = errors.underflow
+) {
+    const fieldSub = a.value.sub(b.value);
+    const fieldSubTruncated = fieldSub.rangeCheckHelper(UInt64.NUM_BITS);
+    const doesNotUnderflow = fieldSubTruncated.equals(fieldSub);
+    assert(doesNotUnderflow, error);
+    return new UInt64(fieldSubTruncated);
+}
+
+function safeAdd(a: UInt64, b: UInt64, error = errors.overflow) {
+    const fieldAdd = a.value.add(b.value);
+    const fieldAddTruncated = fieldAdd.rangeCheckHelper(UInt64.NUM_BITS);
+    const doesNotOverflow = fieldAddTruncated.equals(fieldAdd);
+    assert(doesNotOverflow, error + ' (a=' + a + ',b=' + b + ')');
+    return new UInt64(fieldAddTruncated);
 }
