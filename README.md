@@ -15,7 +15,7 @@
   </tr>
 </table>
 
-This document provides an overview of the project architecture and components.
+This document provides an overview of the project architecture and components. In addition, presentation slides are available at https://docs.google.com/presentation/d/1a1a2Ibf6whsyljMr2E5qtEDeD1yQ709n2UzVDbmQD9U.
 
 ## Short Description
 Our project enables fast post-disaster financial assistance via cryptocurrency, ensuring end-to-end privacy with zero knowledge proof. By focusing on scalability, digital and financial inclusion, we are leveraging web3 technologies to support those who have lost everything.
