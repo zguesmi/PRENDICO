@@ -139,9 +139,6 @@ export class Compensation extends RuntimeModule<CompensationConfig> {
     public claim(compensationProof: CompensationProof) {
         compensationProof.verify();
 
-        console.log(this.disasterOraclePublicKey.get().value.toBase58());
-        console.log(compensationProof.publicOutput.disasterOraclePublicKey.toBase58());
-
         assert(
             compensationProof.publicOutput.disasterOraclePublicKey.equals(this.disasterOraclePublicKey.get().value),
             'Unknown disasterOraclePublicKey from proof'
