@@ -17,7 +17,7 @@ export default function FormTwo({
   const handleNext = async () => {
     setLoading(true);
 
-    const disasterEndpoint = `http://localhost:8080/disaster?userSessionId=${userId}`;
+    const disasterEndpoint = `http://localhost:8082/disaster?userSessionId=${userId}`;
 
     try {
       const response = await fetch(disasterEndpoint);
