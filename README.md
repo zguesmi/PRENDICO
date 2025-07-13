@@ -1,3 +1,7 @@
+# PRENDICO
+🚀 Winner of **UNICEF** and **Mina Protocol** prizes at [ETHGlobal Istanbul 2023](https://ethglobal.com/showcase/prendico-s8vym).
+
+
 <table style="border-collapse: collapse; width: 100%;">
   <tr>
     <!-- First Image -->
